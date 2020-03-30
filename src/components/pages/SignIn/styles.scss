@@ -1,0 +1,22 @@
+.sign-in {
+  &__form-section {
+    margin-top: 200px;
+    height: 100%;
+  }
+
+  &__image-section {
+    height: 100%;
+    background-image: url('/images/auth-image.jpg');
+  }
+
+  &__submit-button {
+    background-color: #3b6bd2;
+    color: white;
+  }
+
+  &__sign-up-link {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+  }
+}
