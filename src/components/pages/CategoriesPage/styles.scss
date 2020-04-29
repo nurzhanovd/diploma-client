@@ -1,0 +1,21 @@
+.course-page {
+  &__banner {
+    background: url("https://images.unsplash.com/photo-1453733190371-0a9bedd82893?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2167&q=80");
+    background-size: cover;
+    width: 100%;
+    min-height: 120px;
+    margin-top: -3rem;
+  }
+
+  &__title {
+    font-size: 30px;
+    font-weight: 200;
+    color: white;
+  }
+
+  &__new-category {
+    background: white;
+    border-radius: 4px;
+    text-align: center;
+  }
+}

@@ -3,9 +3,9 @@ import { declareAction, declareAtom } from '@reatom/core';
 import { useAction, useAtom } from '@reatom/react';
 import { User, Payload } from 'components/pages/SignIn/types';
 import { Button, Colors, FormGroup, InputGroup, Switch } from '@blueprintjs/core';
+import { Link, useHistory } from 'react-router-dom';
 import { Props } from './props';
 import './styles.scss';
-import { Link } from 'react-router-dom';
 
 const setField = declareAction<Payload>('setField');
 const atom = declareAtom<User>({ login: '', password: '' }, (on) => [
@@ -13,18 +13,17 @@ const atom = declareAtom<User>({ login: '', password: '' }, (on) => [
 ]);
 
 export const SignIn: FC<Props> = (props: Props) => {
-  const userAtom = useAtom(atom);
+  useAtom(atom);
+  const history = useHistory();
   const onChange = useAction<ChangeEventHandler<HTMLInputElement>>((e) =>
     setField({ name: e.target.name, value: e.target.value }),
   );
   return (
     <div className="sign-in w-100 h-100 no-gutters">
       <div className="row h-100">
-        <div className="sign-in__image-section col-6">
-          <p>Heree</p>
-        </div>
+        <div className="sign-in__image-section col-6" />
         <div className="sign-in__form-section col-4 flex-column pl-5">
-          <h1 style={{ color: '#3b6bd2' }} className="bp3-heading mb-2">
+          <h1 style={{ color: '#137cbd' }} className="bp3-heading mb-2">
             Welcome to roots
           </h1>
           <h3 style={{ color: Colors.GRAY2 }} className="bp3-running-text mb-4">
@@ -50,6 +49,10 @@ export const SignIn: FC<Props> = (props: Props) => {
               </p>
             </div>
             <Button
+              onClick={(e: React.MouseEvent<HTMLElement>) => {
+                e.preventDefault();
+                history.push('/courses');
+              }}
               color="white"
               icon="log-in"
               text="Sign In"

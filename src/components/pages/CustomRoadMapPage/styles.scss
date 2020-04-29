@@ -1,0 +1,63 @@
+.road-map {
+  position: relative;
+
+  &__header {
+    height: 500px;
+    margin-top: -3rem;
+    background: url("https://images.unsplash.com/photo-1524146128017-b9dd0bfd2778?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80");
+    background-size: cover;
+    position: relative;
+    padding: 80px 50px !important;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: rgba(33, 35, 32, 0.5);
+    }
+  }
+
+  &__title {
+    font-size: 45px;
+    font-weight: 300;
+    color: ghostwhite;
+    z-index: 100;
+  }
+
+  &__text {
+    margin-top: 15px !important;
+    width: 50%;
+    font-size: 20px;
+    color: ghostwhite;
+    z-index: 100;
+  }
+
+  &__action {
+    font-size: 20px;
+    cursor: pointer;
+    margin-top: 15px;
+    outline: none;
+    border: 1px solid ghostwhite;
+    width: 200px;
+    background: white;
+    border-radius: 4px;
+    z-index: 100;
+    padding: 4px 10px;
+  }
+
+  &__filter {
+    height: 70px;
+    background: #f5f5f5;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  &__filter-title {
+    font-size: 20px;
+    font-weight: 300;
+  }
+}

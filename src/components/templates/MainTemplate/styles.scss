@@ -3,6 +3,39 @@
   &__header {
     width: 100%;
     height: 70px;
-    background-color: $red;
+    background-color: #394b59;
+  }
+
+  &__logo {
+    color: white;
+  }
+
+  &__nav-bar {}
+
+  &__link-list {
+    list-style-type: none;
+    color: #e0e2db;
+  }
+
+  &__link {
+    color: white;
+    cursor: pointer;
+
+    &:hover, &--active {
+      color: white;
+    }
+
+    &:not(:last-child) {
+      margin-right: 2rem;
+    }
+  }
+
+  &__log-out {
+    svg {
+      fill: white !important;
+    }
+    svg:not([fill]) {
+        fill: white !important;
+    }
   }
 }

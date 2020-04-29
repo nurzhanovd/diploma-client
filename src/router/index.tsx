@@ -10,7 +10,7 @@ export default () => (
         <AuthTemplate />
       </Route>
 
-      <Route path="/" exact>
+      <Route path="/">
         <MainTemplate />
       </Route>
     </Switch>

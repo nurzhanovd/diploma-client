@@ -3,7 +3,7 @@ import { declareAction, declareAtom } from '@reatom/core';
 import { useAction, useAtom } from '@reatom/react';
 import { RegisterPayload, Payload } from 'components/pages/SignUp/types';
 import { Button, Colors, FormGroup, InputGroup } from '@blueprintjs/core';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Props } from './props';
 import './styles.scss';
 
@@ -14,7 +14,8 @@ const atom = declareAtom<RegisterPayload>(
 );
 
 export const SignUp: FC<Props> = (props: Props) => {
-  const userAtom = useAtom(atom);
+  useAtom(atom);
+  const history = useHistory();
   const onChange = useAction<ChangeEventHandler<HTMLInputElement>>((e) =>
     setField({ name: e.target.name, value: e.target.value }),
   );
@@ -23,7 +24,7 @@ export const SignUp: FC<Props> = (props: Props) => {
       <div className="row h-100">
         <div className="sign-up__image-section col-6" />
         <div className="sign-up__form-section col-4 flex-column pl-5">
-          <h1 style={{ color: '#3b6bd2' }} className="bp3-heading mb-2">
+          <h1 style={{ color: '#137cbd' }} className="bp3-heading mb-2">
             Everything happens first time!
           </h1>
           <h3 style={{ color: Colors.GRAY2 }} className="bp3-running-text mb-4">
@@ -38,10 +39,20 @@ export const SignUp: FC<Props> = (props: Props) => {
             >
               <InputGroup large onChange={onChange} name="name" id="name" intent="primary" />
             </FormGroup>
-            <FormGroup className="mb-2 sign-up__label" label="Surname" labelFor="surname" intent="primary">
+            <FormGroup
+              className="mb-2 sign-up__label"
+              label="Surname"
+              labelFor="surname"
+              intent="primary"
+            >
               <InputGroup large onChange={onChange} name="surname" id="surname" intent="primary" />
             </FormGroup>
-            <FormGroup className="mb-2 sign-up__label" label="Email" labelFor="email" intent="primary">
+            <FormGroup
+              className="mb-2 sign-up__label"
+              label="Email"
+              labelFor="email"
+              intent="primary"
+            >
               <InputGroup
                 large
                 onChange={onChange}
@@ -51,7 +62,12 @@ export const SignUp: FC<Props> = (props: Props) => {
                 type="email"
               />
             </FormGroup>
-            <FormGroup className="mb-2 sign-up__label" label="Username" labelFor="username" intent="primary">
+            <FormGroup
+              className="mb-2 sign-up__label"
+              label="Username"
+              labelFor="username"
+              intent="primary"
+            >
               <InputGroup
                 large
                 onChange={onChange}
@@ -71,7 +87,11 @@ export const SignUp: FC<Props> = (props: Props) => {
                 autoComplete="new-password"
               />
             </FormGroup>
-            <FormGroup className="mb-2 sign-up__label" label="Confirm password" labelFor="confirmPassword">
+            <FormGroup
+              className="mb-2 sign-up__label"
+              label="Confirm password"
+              labelFor="confirmPassword"
+            >
               <InputGroup
                 large
                 onChange={onChange}
@@ -87,6 +107,10 @@ export const SignUp: FC<Props> = (props: Props) => {
               icon="log-in"
               text="Sign Up"
               className="w-100 mt-3 sign-up__submit-button"
+              onClick={(e: React.MouseEvent<HTMLElement>) => {
+                e.preventDefault();
+                history.push('/sign-in');
+              }}
               large
               outlined
             />

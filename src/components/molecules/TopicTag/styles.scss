@@ -1,0 +1,23 @@
+.topic-tag {
+  background: #ededed;
+  padding: 2px;
+  flex: 1;
+  border-radius: 2px;
+  position: relative;
+
+  &__content-block {
+    position: absolute;
+    top: 30px;
+    left: 0;
+  }
+
+  &__table-of-contents {
+    width: 20px;
+    margin-right: 5px;
+    cursor: pointer;
+    height: 100%;
+    top: 27px;
+    background: url("/images/dots.svg");
+    background-size: cover;
+  }
+}

@@ -1,0 +1,29 @@
+.category-page {
+  position: relative;
+
+  &__all-categories-link,
+  &__open-road-map-button,
+  &__tag {
+    border: 1px solid #686f7a;
+    border-radius: 2px;
+    color: #686f7a;
+  }
+
+  &__all-categories-link {
+    position: absolute;
+    top: -15px;
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.02);
+    }
+  }
+
+  &__open-road-map-button {
+    position: absolute;
+    top: -15px;
+    right: 0;
+    cursor: pointer;
+  }
+
+}

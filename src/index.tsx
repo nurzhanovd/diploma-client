@@ -4,6 +4,11 @@ import { App } from './App';
 
 import 'normalize.css';
 
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
+import 'core/styles/normalize.local.scss';
+
 import 'bootstrap-4-grid/css/grid.min.css';
 
 import '@blueprintjs/core/lib/css/blueprint.css';

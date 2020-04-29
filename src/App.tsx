@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import Router from 'router';
-import { createStore } from '@reatom/core';
+import { combine, createStore } from '@reatom/core';
 import { context } from '@reatom/react';
 import { connectReduxDevtools } from '@reatom/debug';
 
-const store = createStore();
+import { expandableCourse } from 'store/courses';
+
+const store = createStore(combine({ expandableCourse }));
 
 export const App = () => {
   useEffect(() => connectReduxDevtools(store), []);
