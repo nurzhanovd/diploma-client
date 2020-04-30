@@ -1,8 +1,13 @@
 import { HTMLAttributes } from 'react';
 
+type Action = {
+  text: string;
+  onClick: (id: any) => void;
+};
+
 export type Props = HTMLAttributes<HTMLDivElement> & {
   nodeId: number | string;
   breadcrumb: string[];
   text: string;
-  ref: any;
+  actions: Action[];
 };

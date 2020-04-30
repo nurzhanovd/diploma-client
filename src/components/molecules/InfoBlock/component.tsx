@@ -1,14 +1,12 @@
 import React, { FC, forwardRef, Ref } from 'react';
 import classNames from 'classnames';
-import { useHistory } from 'react-router';
 
 import './styles.scss';
 import { Props } from './props';
 
 export const InfoBlock: FC<Props> = forwardRef((props, ref: Ref<HTMLDivElement>) => {
-  const { text, nodeId, breadcrumb, className, ...rest } = props;
-  const { push } = useHistory();
-  const onClick = () => push(`/learn/${nodeId}`);
+  const { text, nodeId, breadcrumb, className, actions, ...rest } = props;
+
   return (
     <div
       ref={ref}
@@ -30,10 +28,15 @@ export const InfoBlock: FC<Props> = forwardRef((props, ref: Ref<HTMLDivElement>)
           ))}
         </div>
       </section>
-      <section className="info-block__actions">
-        <button onClick={onClick} type="button">Open topic</button>
-        <button type="button">I already know this, skip it</button>
-      </section>
+      {actions.length && (
+        <section className="info-block__actions">
+          {actions.map((n) => (
+            <button key={n.text} onClick={() => n.onClick(nodeId)} type="button">
+              {n.text}
+            </button>
+          ))}
+        </section>
+      )}
     </div>
   );
 });

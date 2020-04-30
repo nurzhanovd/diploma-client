@@ -14,7 +14,6 @@
     display: flex;
     position: relative;
     cursor: pointer;
-    background: transparent;
     .image {
       background: url("/images/plus.svg");
       background-size: cover;
@@ -27,7 +26,7 @@
     .text {
       padding-right: 18px;
       margin-right: 14px;
-      background: inherit;
+      background: white;
     }
 
     &::after {

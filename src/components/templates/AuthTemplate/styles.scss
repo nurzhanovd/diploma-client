@@ -4,3 +4,27 @@
   overflow: hidden;
   margin: auto;
 }
+
+.auth {
+  &__form-section {
+    margin-top: 200px;
+    height: 100%;
+  }
+
+  &__image-section {
+    height: 100%;
+    background-image: url('https://images.unsplash.com/photo-1506815896118-1e3159bef72f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1600&q=80');
+    background-size: cover;
+  }
+
+  &__submit-button {
+    background-color: #3b6bd2;
+    color: white;
+  }
+
+  &__sign-up-link {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+  }
+}

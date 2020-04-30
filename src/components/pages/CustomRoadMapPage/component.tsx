@@ -1,12 +1,13 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { Row } from 'components/molecules/Row';
 import { Payload } from 'components/organisms/ExpandableCourse';
 
+import { addNode } from './services/addNode';
 import { Props } from './props';
 import './styles.scss';
 
-const payload: Payload = {
+const init: Payload = {
   root: 1,
   data: {
     1: {
@@ -38,6 +39,13 @@ const payload: Payload = {
 export const CustomRoadMapPage: FC<Props> = (props) => {
   const { className, ...rest } = props;
   const [open, setOpen] = useState<Set<string | number>>(new Set());
+  const [payload, setPayload] = useState<Payload>(init);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setPayload((p) => addNode(p, { id: 5, parentId: 3, title: 'Kek2', childes: [] }, 3));
+    }, 3000);
+  }, []);
 
   const onClick = (id: string | number) => {
     if (open.has(id)) {

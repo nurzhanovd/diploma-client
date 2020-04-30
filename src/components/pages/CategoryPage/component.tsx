@@ -41,7 +41,7 @@ export const CategoryPage: FC<Props> = (props) => {
   const { id } = useParams();
   const { push } = useHistory();
   const onBackClick = useCallback(() => push('/categories'), [push]);
-  const onRoadMapClick = useCallback(() => push(`/create-roadmap?category=${id}`), []);
+  const onRoadMapClick = useCallback(() => push(`/create-roadmap?category=${id}`), [push, id]);
 
   return (
     <div className="container category-page d-flex flex-column">
