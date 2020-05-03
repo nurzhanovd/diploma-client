@@ -1,143 +1,113 @@
-import React, { FC } from 'react';
-import { LearningCategories } from 'components/organisms/LearningCategories';
-import { CategoryTag } from 'components/atoms/CategoryTag';
-import { useHistory } from 'react-router';
-import Slider from 'react-slick';
+import React, { FC, useCallback, useState } from 'react';
+import { CategoryCard } from 'components/molecules/CategoryCard';
+import { Switch } from '@blueprintjs/core';
 import { Props } from './props';
 
 import './styles.scss';
 
-const categories = [
-  { title: 'Development', id: 1 },
-  { title: 'Management', id: 2 },
-  { title: 'Marketing', id: 3 },
-  { title: 'Finance', id: 3 },
-  { title: 'Logistic', id: 3 },
-  { title: 'Development', id: 1 },
-  { title: 'Administration', id: 3 },
-  { title: 'Medicine', id: 3 },
-  { title: 'Judgement', id: 3 },
-  { title: 'Management', id: 2 },
-  { title: 'Marketing', id: 3 },
-  { title: 'Development', id: 1 },
-  { title: 'Management', id: 2 },
-  { title: 'Marketing', id: 3 },
-  { title: 'Finance', id: 3 },
-  { title: 'Logistic', id: 3 },
-  { title: 'Administration', id: 3 },
-  { title: 'Medicine', id: 3 },
-  { title: 'Judgement', id: 3 },
-  { title: 'Finance', id: 3 },
-  { title: 'Logistic', id: 3 },
-  { title: 'Marketing', id: 3 },
-  { title: 'Judgement', id: 3 },
-  { title: 'Logistic', id: 3 },
-  { title: 'Finance', id: 3 },
-  { title: 'Management', id: 2 },
-  { title: 'Medicine', id: 3 },
-  { title: 'Development', id: 1 },
-  { title: 'Administration', id: 3 },
+const list = [
+  {
+    text: 'Computer Science',
+    description:
+      'Computer science is the study of processes that represented as data in the form of programs.',
+    id: 1,
+    image:
+      'https://images.unsplash.com/photo-1542064923-b4bd6908c745?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80',
+  },
+  {
+    text: 'Computer Science',
+    description:
+      'Computer science is the study of processes that represented as data in the form of programs.',
+    id: 1,
+    image:
+      'https://images.unsplash.com/photo-1542064923-b4bd6908c745?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80',
+  },
+  {
+    text: 'Computer Science',
+    description:
+      'Computer science is the study of processes that represented as data in the form of programs.',
+    id: 1,
+    image:
+      'https://images.unsplash.com/photo-1542064923-b4bd6908c745?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80',
+  },
+  {
+    text: 'Computer Science',
+    description:
+      'Computer science is the study of processes that represented as data in the form of programs.',
+    id: 1,
+    image:
+      'https://images.unsplash.com/photo-1542064923-b4bd6908c745?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80',
+  },
+  {
+    text: 'Computer Science',
+    description:
+      'Computer science is the study of processes that represented as data in the form of programs.',
+    id: 1,
+    image:
+      'https://images.unsplash.com/photo-1542064923-b4bd6908c745?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80',
+  },
+  {
+    text: 'Computer Science',
+    description:
+      'Computer science is the study of processes that represented as data in the form of programs.',
+    id: 1,
+    image:
+      'https://images.unsplash.com/photo-1542064923-b4bd6908c745?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80',
+  },
 ];
 
-const sliderProps = {
-  dots: false,
-  infinite: true,
-  speed: 500,
-  slidesToShow: 5,
-  slidesToScroll: 1,
-};
-
 export const CategoriesPage: FC<Props> = () => {
-  const { push } = useHistory();
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const toggleSuggestions = useCallback(() => setShowSuggestions((p) => !p), []);
   return (
-    <div className="d-flex flex-column">
-      <div className="container-fluid course-page__banner mb-3">
-        <div className="container">
-          <p className="course-page__title my-3">Choose categories</p>
-          <Slider {...sliderProps} className="mb-4">
-            <CategoryTag
-              className="mx-4 course-page__new-category"
-              title="Hello"
-              onClick={() => console.log(1)}
-            />
-            <CategoryTag
-              className="mx-4 course-page__new-category"
-              title="Hello"
-              onClick={() => console.log(1)}
-            />
-            <CategoryTag
-              className="mx-4 course-page__new-category"
-              title="Hello"
-              onClick={() => console.log(1)}
-            />
-            <CategoryTag
-              className="mx-4 course-page__new-category"
-              title="Hello"
-              onClick={() => console.log(1)}
-            />
-            <CategoryTag
-              className="mx-4 course-page__new-category"
-              title="Hello"
-              onClick={() => console.log(1)}
-            />
-            <CategoryTag
-              className="mx-4 course-page__new-category"
-              title="Hello"
-              onClick={() => console.log(1)}
-            />
-            <CategoryTag
-              className="mx-4 course-page__new-category"
-              title="Hello"
-              onClick={() => console.log(1)}
-            />
-            <CategoryTag
-              className="mx-4 course-page__new-category"
-              title="Hello"
-              onClick={() => console.log(1)}
-            />
-            <CategoryTag
-              className="mx-4 course-page__new-category"
-              title="Hello"
-              onClick={() => console.log(1)}
-            />
-            <CategoryTag
-              className="mx-4 course-page__new-category"
-              title="Hello"
-              onClick={() => console.log(1)}
-            />
-            <CategoryTag
-              className="mx-4 course-page__new-category"
-              title="Hello"
-              onClick={() => console.log(1)}
-            />
-          </Slider>
+    <div className="d-flex flex-column categories-page">
+      <div className="container-fluid categories-page__banner d-flex flex-column justify-content-center align-items-center">
+        <p className="categories-page__title mb-2">Browse the full library</p>
+        <p className="categories-page__desc">
+          Get new knowledge of various fields authored and improved by our community
+        </p>
+      </div>
+      <div className="container-fluid categories-page__filter d-flex align-items-center">
+        <div className="container d-flex align-items-center">
+          <p className="mr-4">Filter by:</p>
+          <div className="bp3-select bp3-large">
+            <select>
+              <option selected>Category</option>
+              <option value="1">All</option>
+              <option value="2">Computer Science</option>
+              <option value="3">Management</option>
+              <option value="4">Data Science</option>
+            </select>
+          </div>
+          <Switch
+            className="ml-auto mb-0"
+            checked={showSuggestions}
+            label="Suggestions"
+            onChange={toggleSuggestions}
+          />
         </div>
       </div>
-      <div className="container">
-        <h2 className="bp3-heading mb-4">Available categories</h2>
-        <LearningCategories
-          categories={categories.map((n) => ({ ...n, onClick: (id) => push(`/categories/${id}`) }))}
-        />
+      <div className="container mt-3">
+        <h2 className="bp3-heading mb-4">
+          {showSuggestions ? 'Categories based on your suggestions' : 'Available categories'}
+        </h2>
+        <div className="d-flex row px-0">
+          {!showSuggestions ? (
+            list.map((n) => (
+              <div className="col-4 mb-5" key={n.id}>
+                <CategoryCard {...n} />
+              </div>
+            ))
+          ) : (
+            <CategoryCard
+              text="Data Science"
+              description="Data science is the study of processes that represented as data in the form of programs."
+              id={1}
+              image="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+            />
+          )}
+        </div>
       </div>
-      {/* <div> */}
-      {/*  <h2 className="bp3-heading mb-4 d-flex align-items-center"> */}
-      {/*    Suggestions */}
-      {/*    <Tooltip */}
-      {/*      className={Classes.TOOLTIP_INDICATOR} */}
-      {/*      content="Suggestions based on your preferences" */}
-      {/*    > */}
-      {/*      <Icon icon="info-sign" /> */}
-      {/*    </Tooltip> */}
-      {/*  </h2> */}
-      {/*  <CourseSuggestion */}
-      {/*    cards={[ */}
-      {/*      { title: 'OOP', description: 'Description' }, */}
-      {/*      { title: 'OOP', description: 'Description' }, */}
-      {/*      { title: 'OOP', description: 'Description' }, */}
-      {/*      { title: 'OOP', description: 'Description' }, */}
-      {/*    ]} */}
-      {/*  /> */}
-      {/* </div> */}
     </div>
   );
 };

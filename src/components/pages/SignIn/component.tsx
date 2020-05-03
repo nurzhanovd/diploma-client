@@ -48,7 +48,7 @@ export const SignIn: FC<Props> = (props: Props) => {
         <Button
           onClick={(e: React.MouseEvent<HTMLElement>) => {
             e.preventDefault();
-            history.push('/categories');
+            history.push('/main/categories');
           }}
           color="white"
           icon="log-in"

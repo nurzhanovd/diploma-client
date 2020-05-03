@@ -1,4 +1,4 @@
-import React, { FC, useMemo, createRef, useState, useCallback } from 'react';
+import React, { FC, useMemo, createRef, useState, useCallback, useEffect } from 'react';
 import classNames from 'classnames';
 import { InfoBlock } from 'components/molecules/InfoBlock';
 import { useHistory } from 'react-router';
@@ -22,9 +22,23 @@ export const TopicTag: FC<Props> = (props) => {
     [onClick],
   );
 
+  const isOutSideClick = useCallback(
+    (event) => {
+      if (ref && ref.current && !ref.current.contains(event.target)) {
+        setInfoBlockOpen(false);
+      }
+    },
+    [ref],
+  );
+
+  useEffect(() => {
+    document.addEventListener('mousedown', isOutSideClick);
+    return () => document.removeEventListener('mousedown', isOutSideClick);
+  }, [isOutSideClick]);
+
   const { text, nodeId, breadCrumb, className, ...rest } = props;
   return (
-    <div className={classNames('topic-tag d-flex', className)} {...rest}>
+    <div onClick={onClick} className={classNames('topic-tag d-flex', className)} {...rest}>
       <span>{text}</span>
       {openInfoBlock && (
         <div ref={ref}>
@@ -37,7 +51,7 @@ export const TopicTag: FC<Props> = (props) => {
           />
         </div>
       )}
-      <span onClick={toggleInfoBlock} className="topic-tag__table-of-contents p-2 ml-auto" />
+      <span className="topic-tag__table-of-contents p-2 ml-auto" />
     </div>
   );
 };

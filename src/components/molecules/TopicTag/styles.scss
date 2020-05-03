@@ -1,10 +1,11 @@
 .topic-tag {
   background: #ededed;
-  padding: 2px;
   flex: 1;
   border-radius: 2px;
   position: relative;
-
+  padding: 4px;
+  font-size: 12px;
+  cursor: pointer;
 
   &__content-block {
     position: absolute;

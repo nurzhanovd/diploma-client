@@ -31,7 +31,14 @@ export const InfoBlock: FC<Props> = forwardRef((props, ref: Ref<HTMLDivElement>)
       {actions.length && (
         <section className="info-block__actions">
           {actions.map((n) => (
-            <button key={n.text} onClick={() => n.onClick(nodeId)} type="button">
+            <button
+              key={n.text}
+              onClick={(e: any) => {
+                e.stopPropagation();
+                n.onClick(nodeId);
+              }}
+              type="button"
+            >
               {n.text}
             </button>
           ))}

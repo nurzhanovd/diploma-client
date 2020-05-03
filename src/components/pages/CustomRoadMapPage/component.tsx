@@ -1,9 +1,11 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
+import { FormGroup, InputGroup, Label } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { Row } from 'components/molecules/Row';
 import { Payload } from 'components/organisms/ExpandableCourse';
 
 import { addNode } from './services/addNode';
+import { deleteNode } from './services/deleteNode';
 import { Props } from './props';
 import './styles.scss';
 
@@ -44,18 +46,27 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
   useEffect(() => {
     setTimeout(() => {
       setPayload((p) => addNode(p, { id: 5, parentId: 3, title: 'Kek2', childes: [] }, 3));
-    }, 3000);
+    }, 5000);
   }, []);
 
-  const onClick = (id: string | number) => {
-    if (open.has(id)) {
-      open.delete(id);
-    } else {
-      open.add(id);
-    }
+  useEffect(() => {
+    setTimeout(() => {
+      setPayload((p) => deleteNode(p, { id: 5, parentId: 3, title: 'Kek2', childes: [] }));
+    }, 8000);
+  }, []);
 
-    setOpen(new Set(open));
-  };
+  const onClick = useCallback(
+    (id: string | number) => {
+      if (open.has(id)) {
+        open.delete(id);
+      } else {
+        open.add(id);
+      }
+
+      setOpen(new Set(open));
+    },
+    [open],
+  );
   const isOpen = (id: any) => open.has(id);
 
   return (
@@ -63,26 +74,46 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
       <header className="container-fluid road-map__header d-flex flex-column">
         <h1 className="road-map__title">Make your own roadmap</h1>
         <p className="road-map__text">
-          Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.
+          Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece
+          of classical Latin literature from 45 BC, making it over 2000 years old. Richard
+          McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the
+          more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the
+          cites of the word in classical literature, discovered the undoubtable source.
         </p>
         <button className="road-map__action" type="button">
           Create new one
         </button>
       </header>
-      <section className="container-fluid road-map__filter">
-        <div className="container d-flex align-items-center h-100">
-          <p className="mr-4 road-map__filter-title">Filter by:</p>
-          <div className="flex-grow-1 d-flex" />
+      <div style={{ height: 5000 }} className="container-fluid road-map__tree mt-3 d-flex justify-content-between mt-5">
+        <div className="col-6">
+          <Row
+            current={payload.data[payload.root]}
+            payload={payload}
+            onClick={onClick}
+            isOpen={isOpen}
+            isRoot={true}
+          />
         </div>
-      </section>
-      <div style={{ height: 5000 }} className="container road-map__tree mt-3">
-        <Row
-          current={payload.data[payload.root]}
-          payload={payload}
-          onClick={onClick}
-          isOpen={isOpen}
-          isRoot={true}
-        />
+        <div className="col-6 d-flex flex-column">
+          <Label>
+            Category (required)
+            <div className="bp3-select bp3-large">
+              <select>
+                <option value="2">Computer Science</option>
+                <option value="3">Management</option>
+                <option value="4">Data Science</option>
+              </select>
+            </div>
+          </Label>
+          <FormGroup
+            helperText="Helper text with details..."
+            label="Search"
+            labelFor="text-input"
+            labelInfo="(required)"
+          >
+            <InputGroup id="search" />
+          </FormGroup>
+        </div>
       </div>
     </div>
   );

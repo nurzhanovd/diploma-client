@@ -1,25 +1,18 @@
+.nav-bar {
+  min-height: 70px;
 
-.main-template {
-  &__header {
+  nav {
     width: 100%;
-    height: 70px;
-    background-color: var(--white);
-    border-bottom: 1px solid var(--gray);
   }
-
-  &__logo {
-    color: var(--black);
-  }
-
-  &__nav-bar {}
 
   &__link-list {
     list-style-type: none;
+    margin: 0;
+    color: #767676;
   }
 
   &__link {
     font-weight: 900;
-    color: #767676;
     cursor: pointer;
 
     &:hover {
@@ -31,12 +24,12 @@
     }
   }
 
-  &__log-out {
+  .log-out {
     svg {
       fill: var(--black) !important;
     }
     svg:not([fill]) {
-        fill: var(--black) !important;
+      fill: var(--black) !important;
     }
 
     &:hover {

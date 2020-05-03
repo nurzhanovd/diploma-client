@@ -9,12 +9,12 @@ import { ID } from './types/Payload';
 const Wrapper = styled.div``;
 
 export const ExpandableCourse: FC<Props> = (props) => {
-  const { data } = props;
+  const { data, className } = props;
   const courses = useAtom(expandableCourse);
   const onClick = useAction((id) => nodeClick({ id }));
   const isOpen = (id: ID): boolean => courses.has(id);
   return (
-    <Wrapper>
+    <Wrapper className={className}>
       <Row
         isRoot={true}
         payload={data}

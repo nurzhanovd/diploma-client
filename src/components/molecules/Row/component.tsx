@@ -14,6 +14,7 @@ export const Row: FC<Props> = (props) => {
   const isOpen = useMemo(() => props.isOpen(id), [props, id]);
 
   const [breadCrumb, setBreadcrumb] = useState<string[]>([]);
+  const isLeaf = !childes.length;
 
   useEffect(() => {
     setBreadcrumb((prev) => (prev ? getBreadCrumb(payload, current) : prev));
@@ -34,12 +35,11 @@ export const Row: FC<Props> = (props) => {
         'flex-column row-node--active': isOpen,
         'justify-content-between': !isOpen,
         'row-node--child': !isRoot,
-        'row-node--leaf': !childes.length,
+        'row-node--leaf': isLeaf,
       })}
     >
-      <div className="row-node__text" onClick={onClick}>
+      <div className="row-node__edge" onClick={onClick}>
         <span className="image" />
-        <span className="text d-flex align-items-center">{title}</span>
       </div>
       {isOpen ? (
         <div className="ml-1 pl-5 row-node__childes">
@@ -51,13 +51,19 @@ export const Row: FC<Props> = (props) => {
               current={payload.data[n]}
               onClick={props.onClick}
               isOpen={props.isOpen}
+              children={children}
             />
           ))}
         </div>
       ) : children ? (
         children(current, payload)
       ) : (
-        <TopicTag className="ml-3" nodeId={id} text={title} breadCrumb={breadCrumb} />
+        <TopicTag
+          className={classNames({ 'ml-4': !isLeaf })}
+          nodeId={id}
+          text={title}
+          breadCrumb={breadCrumb}
+        />
       )}
     </div>
   );

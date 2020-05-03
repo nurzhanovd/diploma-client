@@ -1,21 +1,42 @@
-.course-page {
+.categories-page {
   &__banner {
-    background: url("https://images.unsplash.com/photo-1453733190371-0a9bedd82893?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2167&q=80");
+    background: url("https://images.unsplash.com/photo-1578658544861-37dbf6d82ea3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80");
     background-size: cover;
     width: 100%;
-    min-height: 120px;
+    min-height: 400px;
     margin-top: -3rem;
   }
 
   &__title {
-    font-size: 30px;
-    font-weight: 200;
-    color: white;
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  &__desc {
+    color: var(--white);
+    font-size: 25px;
+    font-weight: 500;
   }
 
   &__new-category {
     background: white;
     border-radius: 4px;
     text-align: center;
+  }
+
+  &__filter {
+    height: 70px;
+    background-color: #f5f5f5;
+    p {
+      height: 20px;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .bp3-control.bp3-switch input:checked ~ .bp3-control-indicator,
+    .bp3-control.bp3-switch:hover input:checked ~ .bp3-control-indicator{
+      background: black;
+    }
   }
 }

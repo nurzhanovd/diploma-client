@@ -1,0 +1,23 @@
+.about-template {
+  position: relative;
+
+  &__navbar {
+    width: 100%;
+    height: 70px;
+    //background: #1e1e21;
+    padding: 0 80px;
+    .nav-bar {
+      //&__link {
+      //  color: var(--white);
+      //}
+      //
+      //.logo {
+      //  color: var(--white);
+      //}
+
+      &__log-out {
+       display: none;
+      }
+    }
+  }
+}

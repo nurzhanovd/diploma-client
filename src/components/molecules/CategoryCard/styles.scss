@@ -1,0 +1,29 @@
+.category-card-wrapper {
+  height: 300px;
+  position: relative;
+  background-size: contain !important;
+  .category-card {
+    position: absolute;
+    left: 20px;
+    bottom: 35px;
+
+    &__title {
+      color: var(--white);
+      font-size: 25px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    &__desc {
+      color: var(--white);
+      font-size: 15px;
+      width: 200px;
+    }
+
+    &__btn {
+      width: 200px;
+    }
+  }
+}

@@ -1,0 +1,67 @@
+.learn-node-page {
+  &__title {
+    font-size: 35px;
+    font-weight: 600;
+  }
+
+
+  &__table-of-contents {
+    position: sticky;
+    top: 100px;
+  }
+}
+
+.markdown {
+  font-size: 18px;
+  counter-reset: section;
+  h1{
+    display: block;
+    font-size: 2em;
+    margin: 0.67em 0 !important;
+    font-weight: bold;
+  }
+  h2	{
+    display: block;
+    font-size: 1.5em;
+    margin: 0.83em 0 !important;
+    font-weight: bold;
+
+    &::before {
+      counter-increment: section;
+      content: "§" counter(section) ". ";
+    }
+  }
+  h3	{
+    display: block;
+    font-size: 1.17em;
+    margin: 1em 0 !important;
+    font-weight: bold;
+  }
+  h4	{
+    display: block;
+    margin: 1.33em 0 !important;
+    font-weight: bold;
+  }
+  h5 {
+    display: block;
+    font-size: .83em;
+    margin: 1.67em 0 !important;
+    font-weight: bold;
+  }
+  h6 {
+    display: block;
+    font-size: .67em;
+    margin: 2.33em 0 !important;
+    font-weight: bold;
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+
+  p {
+    display: block;
+    margin: 1em 0 !important;
+  }
+}

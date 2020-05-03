@@ -154,7 +154,7 @@ export const SignUp: FC<Props> = (props: Props) => {
             className="w-100 mt-3 sign-up__submit-button"
             onClick={(e: React.MouseEvent<HTMLElement>) => {
               e.preventDefault();
-              push('/auth/sign-in');
+              push('/about');
             }}
             large
             outlined
