@@ -6,6 +6,7 @@ import { CategoryPage } from 'components/pages/CategoryPage';
 import { LearnNodePage } from 'components/pages/LearnNodePage';
 import { Switch, Route } from 'react-router';
 import { NavBar } from 'components/organisms/NavBar';
+import { Footer } from 'components/organisms/Footer';
 import { Props } from './props';
 import './styles.scss';
 
@@ -17,7 +18,7 @@ const links = [
 
 export const MainTemplate: FC<Props> = () => {
   return (
-    <div className="main-template">
+    <div className="main-template d-flex flex-column">
       <header className="main-template__header">
         <NavBar links={links} className="container" />
       </header>
@@ -40,6 +41,7 @@ export const MainTemplate: FC<Props> = () => {
           </Route>
         </Switch>
       </main>
+      <Footer className="mt-auto" />
     </div>
   );
 };

@@ -55,7 +55,7 @@ export const NavBar: FC<Props> = (props) => {
         />
       </div>
       <Overlay {...overlayOptions} isOpen={showSearch} onClose={toggleSearch}>
-        <SearchBar onClose={toggleSearch} className="nav-bar__search-bar w-100 px-5" />
+        <SearchBar onClose={toggleSearch} className="nav-bar__search-bar w-100" />
       </Overlay>
     </div>
   );

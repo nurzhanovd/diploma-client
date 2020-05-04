@@ -1,11 +1,13 @@
 import { Icon, Intent } from '@blueprintjs/core';
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from "react";
 import { useHistory, useParams } from 'react-router';
 import { ExpandableCourse } from 'components/organisms/ExpandableCourse';
 import { useQuery } from '@apollo/react-hooks';
 import payload from './mock';
 
-import { Node } from './index.gql';
+import { Node, NodeVariables } from './__generated__/Node';
+import { parseSog } from './services/parseSog';
+import { Node as NodeQuery } from './index.gql';
 import { Props } from './props';
 import './styles.scss';
 
@@ -13,11 +15,17 @@ const tags = ['IT & Software', 'Software Engineering', 'Programming Languages'];
 
 export const CategoryPage: FC<Props> = (props) => {
   const { id } = useParams();
-  const [fetchPayload, setFetchPayload] = useState<{ id: string; type: 'Fog' | 'Sog' }>({
+  const [fetchPayload] = useState<{ id: string; type: 'Fog' | 'Sog' }>({
     id,
     type: 'Sog',
   });
-  const {} = useQuery(Node);
+  const { data: rawData } = useQuery<Node, NodeVariables>(NodeQuery, {
+    variables: {
+      id: fetchPayload.id,
+    },
+  });
+  const data = useMemo(() => (rawData ? parseSog(rawData) : {}), [rawData]);
+  console.log(data);
   const { push } = useHistory();
   const onBackClick = useCallback(() => push('/main/categories'), [push]);
   const onRoadMapClick = useCallback(() => push(`/main/create-roadmap?category=${id}`), [push, id]);

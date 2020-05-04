@@ -1,0 +1,18 @@
+.footer {
+  padding: 75px 100px;
+  background: var(--black);
+  height: 200px;
+  width: 100%;
+
+  &__text {
+    color: var(--white);
+    font-size: 14px;
+  }
+
+  &__dot {
+    width: 4px;
+    height: 4px;
+    background: var(--white);
+    border-radius: 50%;
+  }
+}
