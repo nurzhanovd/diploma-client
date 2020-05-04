@@ -33,9 +33,9 @@ export const Row: FC<Props> = (props) => {
     <div
       className={classNames('d-flex row-node', className, {
         'flex-column row-node--active': isOpen,
-        'justify-content-between': !isOpen,
         'row-node--child': !isRoot,
         'row-node--leaf': isLeaf,
+        'justify-content-between': !isOpen,
       })}
     >
       <div className="row-node__edge" onClick={onClick}>
@@ -59,7 +59,7 @@ export const Row: FC<Props> = (props) => {
         children(current, payload)
       ) : (
         <TopicTag
-          className={classNames({ 'ml-4': !isLeaf })}
+          className={classNames({ 'ml-3': !isLeaf })}
           nodeId={id}
           text={title}
           breadCrumb={breadCrumb}

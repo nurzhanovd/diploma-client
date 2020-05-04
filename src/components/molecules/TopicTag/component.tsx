@@ -1,4 +1,12 @@
-import React, { FC, useMemo, createRef, useState, useCallback, useEffect } from 'react';
+import React, {
+  FC,
+  useMemo,
+  createRef,
+  useState,
+  useCallback,
+  useEffect,
+  MouseEventHandler,
+} from 'react';
 import classNames from 'classnames';
 import { InfoBlock } from 'components/molecules/InfoBlock';
 import { useHistory } from 'react-router';
@@ -7,12 +15,17 @@ import { Props } from './props';
 import './styles.scss';
 
 export const TopicTag: FC<Props> = (props) => {
+  const { text, nodeId, breadCrumb, className, ...rest } = props;
   const [openInfoBlock, setInfoBlockOpen] = useState(false);
-  const toggleInfoBlock = () => setInfoBlockOpen(!openInfoBlock);
+  const toggleInfoBlock: MouseEventHandler<HTMLSpanElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setInfoBlockOpen(!openInfoBlock);
+  };
   const ref = createRef<HTMLDivElement>();
 
   const { push } = useHistory();
-  const onClick = useCallback((id: any) => push(`/learn/${id}`), [push]);
+  const onClick = useCallback(() => push(`/main/learn/${nodeId}`), [push, nodeId]);
 
   const actions = useMemo(
     () => [
@@ -36,7 +49,6 @@ export const TopicTag: FC<Props> = (props) => {
     return () => document.removeEventListener('mousedown', isOutSideClick);
   }, [isOutSideClick]);
 
-  const { text, nodeId, breadCrumb, className, ...rest } = props;
   return (
     <div onClick={onClick} className={classNames('topic-tag d-flex', className)} {...rest}>
       <span>{text}</span>
@@ -51,7 +63,7 @@ export const TopicTag: FC<Props> = (props) => {
           />
         </div>
       )}
-      <span className="topic-tag__table-of-contents p-2 ml-auto" />
+      <span onClick={toggleInfoBlock} className="topic-tag__table-of-contents p-2 ml-auto" />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { Payload } from 'components/organisms/ExpandableCourse';
 
 import { addNode } from './services/addNode';
 import { deleteNode } from './services/deleteNode';
+import { Fog } from './libs/Fog';
 import { Props } from './props';
 import './styles.scss';
 
@@ -43,6 +44,8 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
   const [open, setOpen] = useState<Set<string | number>>(new Set());
   const [payload, setPayload] = useState<Payload>(init);
 
+  const [fogs] = useState([{ text: 'Strategy' }, { text: 'Template Method' }]);
+
   useEffect(() => {
     setTimeout(() => {
       setPayload((p) => addNode(p, { id: 5, parentId: 3, title: 'Kek2', childes: [] }, 3));
@@ -68,7 +71,6 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
     [open],
   );
   const isOpen = (id: any) => open.has(id);
-
   return (
     <div className={classNames('d-flex flex-column road-map', className)} {...rest}>
       <header className="container-fluid road-map__header d-flex flex-column">
@@ -94,25 +96,34 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
             isRoot={true}
           />
         </div>
-        <div className="col-6 d-flex flex-column">
-          <Label>
-            Category (required)
-            <div className="bp3-select bp3-large">
-              <select>
-                <option value="2">Computer Science</option>
-                <option value="3">Management</option>
-                <option value="4">Data Science</option>
-              </select>
+        <div className="col-6">
+          <div className="d-flex flex-column road-map__form">
+            <Label>
+              Category (required)
+              <div className="bp3-select bp3-large">
+                <select defaultValue="1">
+                  <option value="1">All</option>
+                  <option value="2">Computer Science</option>
+                  <option value="3">Management</option>
+                  <option value="4">Data Science</option>
+                </select>
+              </div>
+            </Label>
+            <FormGroup
+              helperText="Find what you want to learn by keywords"
+              label="Search"
+              labelFor="text-input"
+              labelInfo="(required)"
+            >
+              <InputGroup leftIcon="search" id="search" />
+            </FormGroup>
+
+            <div className="d-flex flex-column mt-5">
+              {fogs.map((n) => (
+                <Fog text={n.text} onClick={console.log} />
+              ))}
             </div>
-          </Label>
-          <FormGroup
-            helperText="Helper text with details..."
-            label="Search"
-            labelFor="text-input"
-            labelInfo="(required)"
-          >
-            <InputGroup id="search" />
-          </FormGroup>
+          </div>
         </div>
       </div>
     </div>

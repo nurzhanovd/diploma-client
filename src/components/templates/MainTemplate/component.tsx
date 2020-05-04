@@ -5,7 +5,7 @@ import { CustomRoadMapPage } from 'components/pages/CustomRoadMapPage';
 import { CategoryPage } from 'components/pages/CategoryPage';
 import { LearnNodePage } from 'components/pages/LearnNodePage';
 import { Switch, Route } from 'react-router';
-import { NavBar } from 'components/molecules/NavBar';
+import { NavBar } from 'components/organisms/NavBar';
 import { Props } from './props';
 import './styles.scss';
 

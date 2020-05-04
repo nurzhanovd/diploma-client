@@ -1,0 +1,550 @@
+directive @cypher(statement: String) on FIELD_DEFINITION
+
+directive @relation(name: String, direction: _RelationDirections, from: String, to: String) on FIELD_DEFINITION | OBJECT
+
+directive @additionalLabels(labels: [String]) on OBJECT
+
+directive @MutationMeta(relationship: String, from: String, to: String) on FIELD_DEFINITION
+
+directive @neo4j_ignore on FIELD_DEFINITION
+
+"""
+Direct the client to resolve this field locally, either from the cache or local resolvers.
+"""
+directive @client(
+  """
+  When true, the client will never use the cache for this value. See
+  https://www.apollographql.com/docs/react/essentials/local-state/#forcing-resolvers-with-clientalways-true
+  """
+  always: Boolean
+) on FIELD | FRAGMENT_DEFINITION | INLINE_FRAGMENT
+
+"""
+Export this locally resolved field as a variable to be used in the remainder of this query. See
+https://www.apollographql.com/docs/react/essentials/local-state/#using-client-fields-as-variables
+"""
+directive @export(
+  """The variable name to export this field as."""
+  as: String!
+) on FIELD
+
+"""
+Specify a custom store key for this result. See
+https://www.apollographql.com/docs/react/advanced/caching/#the-connection-directive
+"""
+directive @connection(
+  """Specify the store key."""
+  key: String!
+
+  """
+  An array of query argument names to include in the generated custom store key.
+  """
+  filter: [String!]
+) on FIELD
+
+type _AddFOGContentsPayload {
+  from: FOG
+  to: KeyValueContent
+}
+
+type _AddFOGPartOfSogPayload {
+  from: SOG
+  to: FOG
+}
+
+type _AddFOGPostrequisitesPayload {
+  from: FOG
+  to: FOG
+}
+
+type _AddFOGPrerequisitesPayload {
+  from: FOG
+  to: FOG
+}
+
+type _AddSOGChildrenPayload {
+  from: SOG
+  to: SOG
+}
+
+type _AddSOGContentsPayload {
+  from: SOG
+  to: KeyValueContent
+}
+
+type _AddSOGFogsPayload {
+  from: SOG
+  to: FOG
+}
+
+type _AddSOGParentsPayload {
+  from: SOG
+  to: SOG
+}
+
+input _FOGFilter {
+  AND: [_FOGFilter!]
+  OR: [_FOGFilter!]
+  uuid: ID
+  uuid_not: ID
+  uuid_in: [ID!]
+  uuid_not_in: [ID!]
+  uuid_contains: ID
+  uuid_not_contains: ID
+  uuid_starts_with: ID
+  uuid_not_starts_with: ID
+  uuid_ends_with: ID
+  uuid_not_ends_with: ID
+  contents: _KeyValueContentFilter
+  contents_not: _KeyValueContentFilter
+  contents_in: [_KeyValueContentFilter!]
+  contents_not_in: [_KeyValueContentFilter!]
+  contents_some: _KeyValueContentFilter
+  contents_none: _KeyValueContentFilter
+  contents_single: _KeyValueContentFilter
+  contents_every: _KeyValueContentFilter
+  prerequisites: _FOGFilter
+  prerequisites_not: _FOGFilter
+  prerequisites_in: [_FOGFilter!]
+  prerequisites_not_in: [_FOGFilter!]
+  prerequisites_some: _FOGFilter
+  prerequisites_none: _FOGFilter
+  prerequisites_single: _FOGFilter
+  prerequisites_every: _FOGFilter
+  postrequisites: _FOGFilter
+  postrequisites_not: _FOGFilter
+  postrequisites_in: [_FOGFilter!]
+  postrequisites_not_in: [_FOGFilter!]
+  postrequisites_some: _FOGFilter
+  postrequisites_none: _FOGFilter
+  postrequisites_single: _FOGFilter
+  postrequisites_every: _FOGFilter
+  partOfSog: _SOGFilter
+  partOfSog_not: _SOGFilter
+  partOfSog_in: [_SOGFilter!]
+  partOfSog_not_in: [_SOGFilter!]
+  partOfSog_some: _SOGFilter
+  partOfSog_none: _SOGFilter
+  partOfSog_single: _SOGFilter
+  partOfSog_every: _SOGFilter
+}
+
+input _FOGInput {
+  uuid: ID!
+}
+
+enum _FOGOrdering {
+  uuid_asc
+  uuid_desc
+  _id_asc
+  _id_desc
+}
+
+input _KeyValueContentFilter {
+  AND: [_KeyValueContentFilter!]
+  OR: [_KeyValueContentFilter!]
+  uuid: ID
+  uuid_not: ID
+  uuid_in: [ID!]
+  uuid_not_in: [ID!]
+  uuid_contains: ID
+  uuid_not_contains: ID
+  uuid_starts_with: ID
+  uuid_not_starts_with: ID
+  uuid_ends_with: ID
+  uuid_not_ends_with: ID
+  key: String
+  key_not: String
+  key_in: [String!]
+  key_not_in: [String!]
+  key_contains: String
+  key_not_contains: String
+  key_starts_with: String
+  key_not_starts_with: String
+  key_ends_with: String
+  key_not_ends_with: String
+  type: String
+  type_not: String
+  type_in: [String!]
+  type_not_in: [String!]
+  type_contains: String
+  type_not_contains: String
+  type_starts_with: String
+  type_not_starts_with: String
+  type_ends_with: String
+  type_not_ends_with: String
+  value: String
+  value_not: String
+  value_in: [String!]
+  value_not_in: [String!]
+  value_contains: String
+  value_not_contains: String
+  value_starts_with: String
+  value_not_starts_with: String
+  value_ends_with: String
+  value_not_ends_with: String
+}
+
+input _KeyValueContentInput {
+  uuid: ID!
+}
+
+enum _KeyValueContentOrdering {
+  uuid_asc
+  uuid_desc
+  key_asc
+  key_desc
+  type_asc
+  type_desc
+  value_asc
+  value_desc
+  _id_asc
+  _id_desc
+}
+
+type _MergeFOGContentsPayload {
+  from: FOG
+  to: KeyValueContent
+}
+
+type _MergeFOGPartOfSogPayload {
+  from: SOG
+  to: FOG
+}
+
+type _MergeFOGPostrequisitesPayload {
+  from: FOG
+  to: FOG
+}
+
+type _MergeFOGPrerequisitesPayload {
+  from: FOG
+  to: FOG
+}
+
+type _MergeSOGChildrenPayload {
+  from: SOG
+  to: SOG
+}
+
+type _MergeSOGContentsPayload {
+  from: SOG
+  to: KeyValueContent
+}
+
+type _MergeSOGFogsPayload {
+  from: SOG
+  to: FOG
+}
+
+type _MergeSOGParentsPayload {
+  from: SOG
+  to: SOG
+}
+
+type _Neo4jDate {
+  year: Int
+  month: Int
+  day: Int
+  formatted: String
+}
+
+input _Neo4jDateInput {
+  year: Int
+  month: Int
+  day: Int
+  formatted: String
+}
+
+type _Neo4jDateTime {
+  year: Int
+  month: Int
+  day: Int
+  hour: Int
+  minute: Int
+  second: Int
+  millisecond: Int
+  microsecond: Int
+  nanosecond: Int
+  timezone: String
+  formatted: String
+}
+
+input _Neo4jDateTimeInput {
+  year: Int
+  month: Int
+  day: Int
+  hour: Int
+  minute: Int
+  second: Int
+  millisecond: Int
+  microsecond: Int
+  nanosecond: Int
+  timezone: String
+  formatted: String
+}
+
+type _Neo4jLocalDateTime {
+  year: Int
+  month: Int
+  day: Int
+  hour: Int
+  minute: Int
+  second: Int
+  millisecond: Int
+  microsecond: Int
+  nanosecond: Int
+  formatted: String
+}
+
+input _Neo4jLocalDateTimeInput {
+  year: Int
+  month: Int
+  day: Int
+  hour: Int
+  minute: Int
+  second: Int
+  millisecond: Int
+  microsecond: Int
+  nanosecond: Int
+  formatted: String
+}
+
+type _Neo4jLocalTime {
+  hour: Int
+  minute: Int
+  second: Int
+  millisecond: Int
+  microsecond: Int
+  nanosecond: Int
+  formatted: String
+}
+
+input _Neo4jLocalTimeInput {
+  hour: Int
+  minute: Int
+  second: Int
+  millisecond: Int
+  microsecond: Int
+  nanosecond: Int
+  formatted: String
+}
+
+type _Neo4jPoint {
+  x: Float
+  y: Float
+  z: Float
+  longitude: Float
+  latitude: Float
+  height: Float
+  crs: String
+  srid: Int
+}
+
+input _Neo4jPointDistanceFilter {
+  point: _Neo4jPointInput!
+  distance: Float!
+}
+
+input _Neo4jPointInput {
+  x: Float
+  y: Float
+  z: Float
+  longitude: Float
+  latitude: Float
+  height: Float
+  crs: String
+  srid: Int
+}
+
+type _Neo4jTime {
+  hour: Int
+  minute: Int
+  second: Int
+  millisecond: Int
+  microsecond: Int
+  nanosecond: Int
+  timezone: String
+  formatted: String
+}
+
+input _Neo4jTimeInput {
+  hour: Int
+  minute: Int
+  second: Int
+  millisecond: Int
+  microsecond: Int
+  nanosecond: Int
+  timezone: String
+  formatted: String
+}
+
+enum _RelationDirections {
+  IN
+  OUT
+}
+
+type _RemoveFOGContentsPayload {
+  from: FOG
+  to: KeyValueContent
+}
+
+type _RemoveFOGPartOfSogPayload {
+  from: SOG
+  to: FOG
+}
+
+type _RemoveFOGPostrequisitesPayload {
+  from: FOG
+  to: FOG
+}
+
+type _RemoveFOGPrerequisitesPayload {
+  from: FOG
+  to: FOG
+}
+
+type _RemoveSOGChildrenPayload {
+  from: SOG
+  to: SOG
+}
+
+type _RemoveSOGContentsPayload {
+  from: SOG
+  to: KeyValueContent
+}
+
+type _RemoveSOGFogsPayload {
+  from: SOG
+  to: FOG
+}
+
+type _RemoveSOGParentsPayload {
+  from: SOG
+  to: SOG
+}
+
+input _SOGFilter {
+  AND: [_SOGFilter!]
+  OR: [_SOGFilter!]
+  uuid: ID
+  uuid_not: ID
+  uuid_in: [ID!]
+  uuid_not_in: [ID!]
+  uuid_contains: ID
+  uuid_not_contains: ID
+  uuid_starts_with: ID
+  uuid_not_starts_with: ID
+  uuid_ends_with: ID
+  uuid_not_ends_with: ID
+  contents: _KeyValueContentFilter
+  contents_not: _KeyValueContentFilter
+  contents_in: [_KeyValueContentFilter!]
+  contents_not_in: [_KeyValueContentFilter!]
+  contents_some: _KeyValueContentFilter
+  contents_none: _KeyValueContentFilter
+  contents_single: _KeyValueContentFilter
+  contents_every: _KeyValueContentFilter
+  children: _SOGFilter
+  children_not: _SOGFilter
+  children_in: [_SOGFilter!]
+  children_not_in: [_SOGFilter!]
+  children_some: _SOGFilter
+  children_none: _SOGFilter
+  children_single: _SOGFilter
+  children_every: _SOGFilter
+  parents: _SOGFilter
+  parents_not: _SOGFilter
+  parents_in: [_SOGFilter!]
+  parents_not_in: [_SOGFilter!]
+  parents_some: _SOGFilter
+  parents_none: _SOGFilter
+  parents_single: _SOGFilter
+  parents_every: _SOGFilter
+  fogs: _FOGFilter
+  fogs_not: _FOGFilter
+  fogs_in: [_FOGFilter!]
+  fogs_not_in: [_FOGFilter!]
+  fogs_some: _FOGFilter
+  fogs_none: _FOGFilter
+  fogs_single: _FOGFilter
+  fogs_every: _FOGFilter
+}
+
+input _SOGInput {
+  uuid: ID!
+}
+
+enum _SOGOrdering {
+  uuid_asc
+  uuid_desc
+  _id_asc
+  _id_desc
+}
+
+type FOG {
+  uuid: ID!
+  contents(first: Int, offset: Int, orderBy: [_KeyValueContentOrdering], filter: _KeyValueContentFilter): [KeyValueContent]
+  prerequisites(first: Int, offset: Int, orderBy: [_FOGOrdering], filter: _FOGFilter): [FOG]
+  postrequisites(first: Int, offset: Int, orderBy: [_FOGOrdering], filter: _FOGFilter): [FOG]
+  partOfSog(first: Int, offset: Int, orderBy: [_SOGOrdering], filter: _SOGFilter): [SOG]
+  _id: String
+}
+
+type KeyValueContent {
+  uuid: ID!
+  key: String
+  type: String
+  value: String
+  _id: String
+}
+
+type Mutation {
+  CreateKeyValueContent(uuid: ID, key: String, type: String, value: String): KeyValueContent
+  UpdateKeyValueContent(uuid: ID!, key: String, type: String, value: String): KeyValueContent
+  DeleteKeyValueContent(uuid: ID!): KeyValueContent
+  MergeKeyValueContent(uuid: ID!, key: String, type: String, value: String): KeyValueContent
+  AddFOGContents(from: _FOGInput!, to: _KeyValueContentInput!): _AddFOGContentsPayload
+  RemoveFOGContents(from: _FOGInput!, to: _KeyValueContentInput!): _RemoveFOGContentsPayload
+  MergeFOGContents(from: _FOGInput!, to: _KeyValueContentInput!): _MergeFOGContentsPayload
+  AddFOGPrerequisites(from: _FOGInput!, to: _FOGInput!): _AddFOGPrerequisitesPayload
+  RemoveFOGPrerequisites(from: _FOGInput!, to: _FOGInput!): _RemoveFOGPrerequisitesPayload
+  MergeFOGPrerequisites(from: _FOGInput!, to: _FOGInput!): _MergeFOGPrerequisitesPayload
+  AddFOGPostrequisites(from: _FOGInput!, to: _FOGInput!): _AddFOGPostrequisitesPayload
+  RemoveFOGPostrequisites(from: _FOGInput!, to: _FOGInput!): _RemoveFOGPostrequisitesPayload
+  MergeFOGPostrequisites(from: _FOGInput!, to: _FOGInput!): _MergeFOGPostrequisitesPayload
+  AddFOGPartOfSog(from: _SOGInput!, to: _FOGInput!): _AddFOGPartOfSogPayload
+  RemoveFOGPartOfSog(from: _SOGInput!, to: _FOGInput!): _RemoveFOGPartOfSogPayload
+  MergeFOGPartOfSog(from: _SOGInput!, to: _FOGInput!): _MergeFOGPartOfSogPayload
+  CreateFOG(uuid: ID): FOG
+  DeleteFOG(uuid: ID!): FOG
+  AddSOGContents(from: _SOGInput!, to: _KeyValueContentInput!): _AddSOGContentsPayload
+  RemoveSOGContents(from: _SOGInput!, to: _KeyValueContentInput!): _RemoveSOGContentsPayload
+  MergeSOGContents(from: _SOGInput!, to: _KeyValueContentInput!): _MergeSOGContentsPayload
+  AddSOGChildren(from: _SOGInput!, to: _SOGInput!): _AddSOGChildrenPayload
+  RemoveSOGChildren(from: _SOGInput!, to: _SOGInput!): _RemoveSOGChildrenPayload
+  MergeSOGChildren(from: _SOGInput!, to: _SOGInput!): _MergeSOGChildrenPayload
+  AddSOGParents(from: _SOGInput!, to: _SOGInput!): _AddSOGParentsPayload
+  RemoveSOGParents(from: _SOGInput!, to: _SOGInput!): _RemoveSOGParentsPayload
+  MergeSOGParents(from: _SOGInput!, to: _SOGInput!): _MergeSOGParentsPayload
+  AddSOGFogs(from: _SOGInput!, to: _FOGInput!): _AddSOGFogsPayload
+  RemoveSOGFogs(from: _SOGInput!, to: _FOGInput!): _RemoveSOGFogsPayload
+  MergeSOGFogs(from: _SOGInput!, to: _FOGInput!): _MergeSOGFogsPayload
+  CreateSOG(uuid: ID): SOG
+  DeleteSOG(uuid: ID!): SOG
+}
+
+type Query {
+  KeyValueContent(uuid: ID, key: String, type: String, value: String, _id: String, first: Int, offset: Int, orderBy: [_KeyValueContentOrdering], filter: _KeyValueContentFilter): [KeyValueContent]
+  FOG(uuid: ID, _id: String, first: Int, offset: Int, orderBy: [_FOGOrdering], filter: _FOGFilter): [FOG]
+  SOG(uuid: ID, _id: String, first: Int, offset: Int, orderBy: [_SOGOrdering], filter: _SOGFilter): [SOG]
+}
+
+type SOG {
+  uuid: ID!
+  contents(first: Int, offset: Int, orderBy: [_KeyValueContentOrdering], filter: _KeyValueContentFilter): [KeyValueContent]
+  children(first: Int, offset: Int, orderBy: [_SOGOrdering], filter: _SOGFilter): [SOG]
+  parents(first: Int, offset: Int, orderBy: [_SOGOrdering], filter: _SOGFilter): [SOG]
+  fogs(first: Int, offset: Int, orderBy: [_FOGOrdering], filter: _FOGFilter): [FOG]
+  _id: String
+}

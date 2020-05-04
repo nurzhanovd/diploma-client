@@ -1,5 +1,9 @@
+:root {
+  --nav-bar-height: 70px;
+}
+
 .nav-bar {
-  min-height: 70px;
+  min-height: var(--nav-bar-height);
 
   nav {
     width: 100%;
@@ -8,7 +12,8 @@
   &__link-list {
     list-style-type: none;
     margin: 0;
-    color: #767676;
+    color: var(--gray);
+    padding-left: 20px;
   }
 
   &__link {
@@ -24,12 +29,14 @@
     }
   }
 
+  &__search-icon,
   .log-out {
+    cursor: pointer;
     svg {
-      fill: var(--black) !important;
+      fill: var(--gray) !important;
     }
     svg:not([fill]) {
-      fill: var(--black) !important;
+      fill: var(--gray) !important;
     }
 
     &:hover {
@@ -40,5 +47,9 @@
         fill: var(--black) !important;
       }
     }
+  }
+
+  &__search-bar {
+    margin-top: var(--nav-bar-height);
   }
 }

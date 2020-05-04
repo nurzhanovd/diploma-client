@@ -64,4 +64,9 @@
   &__tree {
     padding: 0 50px !important;
   }
+
+  &__form {
+    position: sticky;
+    top: 50px;
+  }
 }

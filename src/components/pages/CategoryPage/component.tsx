@@ -1,9 +1,11 @@
 import { Icon, Intent } from '@blueprintjs/core';
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { ExpandableCourse } from 'components/organisms/ExpandableCourse';
+import { useQuery } from '@apollo/react-hooks';
 import payload from './mock';
 
+import { Node } from './index.gql';
 import { Props } from './props';
 import './styles.scss';
 
@@ -11,6 +13,11 @@ const tags = ['IT & Software', 'Software Engineering', 'Programming Languages'];
 
 export const CategoryPage: FC<Props> = (props) => {
   const { id } = useParams();
+  const [fetchPayload, setFetchPayload] = useState<{ id: string; type: 'Fog' | 'Sog' }>({
+    id,
+    type: 'Sog',
+  });
+  const {} = useQuery(Node);
   const { push } = useHistory();
   const onBackClick = useCallback(() => push('/main/categories'), [push]);
   const onRoadMapClick = useCallback(() => push(`/main/create-roadmap?category=${id}`), [push, id]);

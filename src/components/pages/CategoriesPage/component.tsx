@@ -1,7 +1,11 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { CategoryCard } from 'components/molecules/CategoryCard';
 import { Switch } from '@blueprintjs/core';
+import { useQuery } from '@apollo/react-hooks';
 import { Props } from './props';
+import { QueryCategories } from './index.gql';
+import { parseGQLPayload } from './services/parseGQLPayload';
+import { Courses } from './__generated__/Courses';
 
 import './styles.scss';
 
@@ -59,6 +63,8 @@ const list = [
 export const CategoriesPage: FC<Props> = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const toggleSuggestions = useCallback(() => setShowSuggestions((p) => !p), []);
+  const { data: rawData, loading } = useQuery<Courses>(QueryCategories);
+  const data = useMemo(() => parseGQLPayload(rawData), [rawData]);
   return (
     <div className="d-flex flex-column categories-page">
       <div className="container-fluid categories-page__banner d-flex flex-column justify-content-center align-items-center">
@@ -71,12 +77,10 @@ export const CategoriesPage: FC<Props> = () => {
         <div className="container d-flex align-items-center">
           <p className="mr-4">Filter by:</p>
           <div className="bp3-select bp3-large">
-            <select>
-              <option selected>Category</option>
-              <option value="1">All</option>
-              <option value="2">Computer Science</option>
-              <option value="3">Management</option>
-              <option value="4">Data Science</option>
+            <select defaultValue="0">
+              <option value="0">Category</option>
+              <option value="1">Recently Added</option>
+              <option value="2">Popular</option>
             </select>
           </div>
           <Switch
@@ -93,9 +97,12 @@ export const CategoriesPage: FC<Props> = () => {
         </h2>
         <div className="d-flex row px-0">
           {!showSuggestions ? (
-            list.map((n) => (
+            data.map((n) => (
               <div className="col-4 mb-5" key={n.id}>
-                <CategoryCard {...n} />
+                <CategoryCard
+                  {...n}
+                  image="https://images.unsplash.com/photo-1542064923-b4bd6908c745?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80"
+                />
               </div>
             ))
           ) : (

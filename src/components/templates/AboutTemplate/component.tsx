@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Switch, Route } from 'react-router';
-import { NavBar } from 'components/molecules/NavBar';
+import { NavBar } from 'components/organisms/NavBar';
 import { AboutPage } from 'components/pages/AboutPage';
 
 import './styles.scss';

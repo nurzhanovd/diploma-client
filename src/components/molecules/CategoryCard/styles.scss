@@ -8,6 +8,8 @@
     bottom: 35px;
 
     &__title {
+      text-transform: capitalize;
+      cursor: pointer;
       color: var(--white);
       font-size: 25px;
 
@@ -17,6 +19,7 @@
     }
 
     &__desc {
+      text-transform: capitalize;
       color: var(--white);
       font-size: 15px;
       width: 200px;
