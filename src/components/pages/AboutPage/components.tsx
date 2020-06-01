@@ -15,12 +15,12 @@ export const AboutPage: FC<Props> = (props: Props) => {
         touchControls: true,
         minHeight: 600.0,
         minWidth: 200.0,
-        scale: 1.0,
-        scaleMobile: 1.0,
         color: 'black',
         backgroundColor: '#EEF0F2',
-        maxDistance: 29.0,
-        spacing: 14.0,
+        scale: 1.0,
+        scaleMobile: 1.0,
+        maxDistance: 23.0,
+        spacing: 16.0,
       });
     }
   }, [ref, vanta]);
@@ -29,8 +29,7 @@ export const AboutPage: FC<Props> = (props: Props) => {
       <div className="container-fluid px-0 position-relative">
         <div ref={ref} className="main-page__net #net" />
         <div className="main-page__text">
-          <h1 className="mb-3">I don't know what to write here</h1>
-          <p>Learn only what you need</p>
+          <h1 className="mb-3">Learn only what you need</h1>
         </div>
       </div>
       <div className="container px-0 main-page__landing">

@@ -1,29 +1,13 @@
 import { gql } from 'apollo-boost';
 
 export const QueryCategories = gql`
-  fragment ContentFragment on KeyValueContent {
-    uuid
-    key
-    value
-    type
-  }
-
-  fragment SOGFragment on SOG {
-    uuid
-    contents {
-      ...ContentFragment
-    }
-    children {
+  query QueryCategories {
+    SOG(filter: { contents_some: { key: "hierarchy", value: "0" } }) {
       uuid
       contents {
-        ...ContentFragment
+        key
+        value
       }
-    }
-  }
-
-  query Courses {
-    SOG(filter: { contents_some: { key: "hierarchy", value: "0" } }) {
-      ...SOGFragment
     }
   }
 `;

@@ -1,29 +1,26 @@
 import { gql } from 'apollo-boost';
 
-export const Node = gql`
-  fragment KeyValue on KeyValueContent {
-    uuid
-    key
-    value
-  }
-
-  fragment SogData on SOG {
-    uuid
-    contents {
-      ...KeyValue
-    }
-    fogs {
-      contents {
-        ...KeyValue
+export const RST = gql`
+  query RST($id: ID!) {
+    RecursiveSOGTree(uuid: $id) {
+      nodes {
+        type
+        uuid
       }
-    }
-  }
-
-  query Node($id: ID!) {
-    SOG(uuid: $id) {
-      ...SogData
-      children {
-        ...SogData
+      nodeRels {
+        from
+        to
+      }
+      nodeContents {
+        uuid
+        type
+        value
+        key
+        order
+      }
+      nodeContentRels {
+        from
+        to
       }
     }
   }

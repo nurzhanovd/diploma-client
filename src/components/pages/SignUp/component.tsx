@@ -4,7 +4,7 @@ import { declareAction, declareAtom } from '@reatom/core';
 import { useAction, useAtom } from '@reatom/react';
 import { RegisterPayload, Payload } from 'components/pages/SignUp/types';
 import { CategoryTag } from 'components/atoms/CategoryTag';
-import { Button, Colors, FormGroup, InputGroup } from '@blueprintjs/core';
+import { Button, FormGroup, InputGroup } from '@blueprintjs/core';
 import { Link, useHistory } from 'react-router-dom';
 
 import { Props } from './props';
@@ -36,10 +36,10 @@ export const SignUp: FC<Props> = (props: Props) => {
   );
   return (
     <div className="sign-up d-flex flex-column">
-      <h1 style={{ color: '#137cbd' }} className="bp3-heading mb-2">
+      <h1 style={{ color: 'var(--royal-blue)' }} className="bp3-heading mb-2">
         Everything happens first time!
       </h1>
-      <h3 style={{ color: Colors.GRAY2 }} className="bp3-running-text mb-4">
+      <h3 style={{ color: 'var(--black)' }} className="bp3-running-text mb-4">
         Sign up for getting access to our app
       </h3>
       {step === 1 ? (

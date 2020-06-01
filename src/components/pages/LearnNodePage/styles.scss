@@ -9,6 +9,33 @@
     position: sticky;
     top: 100px;
   }
+
+  &__amount-of-topics {
+    font-size: 17px;
+    color: var(--black);
+  }
+
+  &__complete-node-btn {
+    cursor: pointer;
+    background: var(--light-green);
+    color: white;
+    font-size: 16px;
+    padding: 7px 12px;
+    outline-color: var(--light-green) !important;
+  }
+
+  &__topic-tag {
+    & > * {
+      &:first-child {
+        margin-right: 12px;
+      }
+    }
+  }
+
+  &__topic-title {
+    color: var(--black);
+    font-size: 16px;
+  }
 }
 
 .markdown {
