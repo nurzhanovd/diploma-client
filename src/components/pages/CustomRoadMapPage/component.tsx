@@ -33,7 +33,7 @@ const init: Payload = {
     4: {
       id: 4,
       parentId: 3,
-      title: 'Kek',
+      title: 'Display',
       childes: [],
     },
   },

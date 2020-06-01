@@ -16,7 +16,7 @@
     p {
       font-size: 14px;
       color: #808080;
-
+      white-space: nowrap;
       &:not(:last-child) {
         &::after {
           font-size: 95%;

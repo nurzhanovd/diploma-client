@@ -20,7 +20,7 @@ export const SignIn: FC<Props> = (props: Props) => {
   );
   return (
     <>
-      <h1 style={{ color: '#137cbd' }} className="bp3-heading mb-2">
+      <h1 style={{ color: 'var(--royal-blue)' }} className="bp3-heading mb-2">
         Welcome to roots
       </h1>
       <h3 style={{ color: Colors.GRAY2 }} className="bp3-running-text mb-4">
@@ -40,8 +40,8 @@ export const SignIn: FC<Props> = (props: Props) => {
           />
         </FormGroup>
         <div className="row no-gutters w-100 my-3 justify-content-between align-items-center">
-          <Switch className="my-0" label="Remember me" />
-          <p className="m-0" style={{ color: '#3b6bd2', cursor: 'pointer' }}>
+          <Switch className="my-0" style={{ color: 'var(--black)' }} label="Remember me" />
+          <p className="m-0" style={{ color: 'var(--black)', cursor: 'pointer' }}>
             Forgotten password
           </p>
         </div>

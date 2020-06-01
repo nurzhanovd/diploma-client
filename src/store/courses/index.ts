@@ -2,7 +2,7 @@ import { declareAction, declareAtom } from '@reatom/core';
 
 export const nodeClick = declareAction<{ id: number | string }>();
 export const expandableCourse = declareAtom<Set<string | number>>(
-  'expandableCourse',
+  'ExpandableCourse',
   new Set(),
   (on) => [
     on(nodeClick, (state, payload) => {

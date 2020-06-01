@@ -33,7 +33,7 @@ export const MainTemplate: FC<Props> = () => {
           <Route path="/main/categories/:id">
             <CategoryPage />
           </Route>
-          <Route path="/main/learn/:nodeID">
+          <Route path="/main/learn/:nodeId">
             <LearnNodePage />
           </Route>
           <Route path="/main/create-roadmap">

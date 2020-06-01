@@ -59,7 +59,7 @@ export const Row: FC<Props> = (props) => {
         children(current, payload)
       ) : (
         <TopicTag
-          className={classNames({ 'ml-3': !isLeaf })}
+          className={classNames('flex-grow-1',{ 'ml-3': !isLeaf })}
           nodeId={id}
           text={title}
           breadCrumb={breadCrumb}

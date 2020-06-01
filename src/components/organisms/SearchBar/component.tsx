@@ -54,7 +54,7 @@ export const SearchBar: FC<Props> = (props) => {
                 ))}
               </ul>
               <Link to="/main/learn/1">
-                <p className="search-bar__node-link">Check all >></p>
+                <p className="search-bar__node-link">Check all</p>
               </Link>
             </div>
             <div>
