@@ -82,6 +82,56 @@ type _AddSOGParentsPayload {
   to: SOG
 }
 
+input _FileFilter {
+  AND: [_FileFilter!]
+  OR: [_FileFilter!]
+  filename: ID
+  filename_not: ID
+  filename_in: [ID!]
+  filename_not_in: [ID!]
+  filename_contains: ID
+  filename_not_contains: ID
+  filename_starts_with: ID
+  filename_not_starts_with: ID
+  filename_ends_with: ID
+  filename_not_ends_with: ID
+  mimetype: String
+  mimetype_not: String
+  mimetype_in: [String!]
+  mimetype_not_in: [String!]
+  mimetype_contains: String
+  mimetype_not_contains: String
+  mimetype_starts_with: String
+  mimetype_not_starts_with: String
+  mimetype_ends_with: String
+  mimetype_not_ends_with: String
+  encoding: String
+  encoding_not: String
+  encoding_in: [String!]
+  encoding_not_in: [String!]
+  encoding_contains: String
+  encoding_not_contains: String
+  encoding_starts_with: String
+  encoding_not_starts_with: String
+  encoding_ends_with: String
+  encoding_not_ends_with: String
+}
+
+input _FileInput {
+  filename: ID!
+}
+
+enum _FileOrdering {
+  filename_asc
+  filename_desc
+  mimetype_asc
+  mimetype_desc
+  encoding_asc
+  encoding_desc
+  _id_asc
+  _id_desc
+}
+
 input _FOGFilter {
   AND: [_FOGFilter!]
   OR: [_FOGFilter!]
@@ -183,6 +233,24 @@ input _KeyValueContentFilter {
   value_not_starts_with: String
   value_ends_with: String
   value_not_ends_with: String
+  order: Int
+  order_not: Int
+  order_in: [Int!]
+  order_not_in: [Int!]
+  order_lt: Int
+  order_lte: Int
+  order_gt: Int
+  order_gte: Int
+  orderForField: String
+  orderForField_not: String
+  orderForField_in: [String!]
+  orderForField_not_in: [String!]
+  orderForField_contains: String
+  orderForField_not_contains: String
+  orderForField_starts_with: String
+  orderForField_not_starts_with: String
+  orderForField_ends_with: String
+  orderForField_not_ends_with: String
 }
 
 input _KeyValueContentInput {
@@ -198,6 +266,10 @@ enum _KeyValueContentOrdering {
   type_desc
   value_asc
   value_desc
+  order_asc
+  order_desc
+  orderForField_asc
+  orderForField_desc
   _id_asc
   _id_desc
 }
@@ -379,9 +451,85 @@ input _Neo4jTimeInput {
   formatted: String
 }
 
+input _NodeFilter {
+  AND: [_NodeFilter!]
+  OR: [_NodeFilter!]
+  uuid: ID
+  uuid_not: ID
+  uuid_in: [ID!]
+  uuid_not_in: [ID!]
+  uuid_contains: ID
+  uuid_not_contains: ID
+  uuid_starts_with: ID
+  uuid_not_starts_with: ID
+  uuid_ends_with: ID
+  uuid_not_ends_with: ID
+  type: String
+  type_not: String
+  type_in: [String!]
+  type_not_in: [String!]
+  type_contains: String
+  type_not_contains: String
+  type_starts_with: String
+  type_not_starts_with: String
+  type_ends_with: String
+  type_not_ends_with: String
+}
+
+input _NodeInput {
+  uuid: ID!
+}
+
+enum _NodeOrdering {
+  uuid_asc
+  uuid_desc
+  type_asc
+  type_desc
+  _id_asc
+  _id_desc
+}
+
 enum _RelationDirections {
   IN
   OUT
+}
+
+input _RelFilter {
+  AND: [_RelFilter!]
+  OR: [_RelFilter!]
+  from: String
+  from_not: String
+  from_in: [String!]
+  from_not_in: [String!]
+  from_contains: String
+  from_not_contains: String
+  from_starts_with: String
+  from_not_starts_with: String
+  from_ends_with: String
+  from_not_ends_with: String
+  to: String
+  to_not: String
+  to_in: [String!]
+  to_not_in: [String!]
+  to_contains: String
+  to_not_contains: String
+  to_starts_with: String
+  to_not_starts_with: String
+  to_ends_with: String
+  to_not_ends_with: String
+}
+
+input _RelInput {
+  from: String!
+}
+
+enum _RelOrdering {
+  from_asc
+  from_desc
+  to_asc
+  to_desc
+  _id_asc
+  _id_desc
 }
 
 type _RemoveFOGContentsPayload {
@@ -422,6 +570,16 @@ type _RemoveSOGFogsPayload {
 type _RemoveSOGParentsPayload {
   from: SOG
   to: SOG
+}
+
+input _RSTFilter {
+  AND: [_RSTFilter!]
+  OR: [_RSTFilter!]
+}
+
+enum _RSTOrdering {
+  _id_asc
+  _id_desc
 }
 
 input _SOGFilter {
@@ -482,6 +640,13 @@ enum _SOGOrdering {
   _id_desc
 }
 
+type File {
+  filename: ID!
+  mimetype: String!
+  encoding: String!
+  _id: String
+}
+
 type FOG {
   uuid: ID!
   contents(first: Int, offset: Int, orderBy: [_KeyValueContentOrdering], filter: _KeyValueContentFilter): [KeyValueContent]
@@ -496,14 +661,18 @@ type KeyValueContent {
   key: String
   type: String
   value: String
+  order: Int
+  orderForField: String
   _id: String
 }
 
 type Mutation {
-  CreateKeyValueContent(uuid: ID, key: String, type: String, value: String): KeyValueContent
-  UpdateKeyValueContent(uuid: ID!, key: String, type: String, value: String): KeyValueContent
+  DeleteFileAndRemoveFromDb(filename: ID!): File
+  UploadFile(file: Upload!): File!
+  CreateKeyValueContent(uuid: ID, key: String, type: String, value: String, order: Int, orderForField: String): KeyValueContent
+  UpdateKeyValueContent(uuid: ID!, key: String, type: String, value: String, order: Int, orderForField: String): KeyValueContent
   DeleteKeyValueContent(uuid: ID!): KeyValueContent
-  MergeKeyValueContent(uuid: ID!, key: String, type: String, value: String): KeyValueContent
+  MergeKeyValueContent(uuid: ID!, key: String, type: String, value: String, order: Int, orderForField: String): KeyValueContent
   AddFOGContents(from: _FOGInput!, to: _KeyValueContentInput!): _AddFOGContentsPayload
   RemoveFOGContents(from: _FOGInput!, to: _KeyValueContentInput!): _RemoveFOGContentsPayload
   MergeFOGContents(from: _FOGInput!, to: _KeyValueContentInput!): _MergeFOGContentsPayload
@@ -532,12 +701,51 @@ type Mutation {
   MergeSOGFogs(from: _SOGInput!, to: _FOGInput!): _MergeSOGFogsPayload
   CreateSOG(uuid: ID): SOG
   DeleteSOG(uuid: ID!): SOG
+  CreateFile(filename: ID, mimetype: String!, encoding: String!): File
+  UpdateFile(filename: ID!, mimetype: String, encoding: String): File
+  DeleteFile(filename: ID!): File
+  MergeFile(filename: ID!, mimetype: String, encoding: String): File
+  CreateNode(uuid: ID, type: String): Node
+  UpdateNode(uuid: ID!, type: String): Node
+  DeleteNode(uuid: ID!): Node
+  MergeNode(uuid: ID!, type: String): Node
+  CreateRel(from: String, to: String): Rel
+  UpdateRel(from: String!, to: String): Rel
+  DeleteRel(from: String!): Rel
+  MergeRel(from: String!, to: String): Rel
+  CreateRST: RST
+  DeleteRST: RST
+}
+
+type Node {
+  uuid: ID!
+  type: String
+  _id: String
 }
 
 type Query {
-  KeyValueContent(uuid: ID, key: String, type: String, value: String, _id: String, first: Int, offset: Int, orderBy: [_KeyValueContentOrdering], filter: _KeyValueContentFilter): [KeyValueContent]
+  RecursiveSOGTree(uuid: ID!, filter: _RSTFilter): RST
+  KeyValueContent(uuid: ID, key: String, type: String, value: String, order: Int, orderForField: String, _id: String, first: Int, offset: Int, orderBy: [_KeyValueContentOrdering], filter: _KeyValueContentFilter): [KeyValueContent]
   FOG(uuid: ID, _id: String, first: Int, offset: Int, orderBy: [_FOGOrdering], filter: _FOGFilter): [FOG]
   SOG(uuid: ID, _id: String, first: Int, offset: Int, orderBy: [_SOGOrdering], filter: _SOGFilter): [SOG]
+  File(filename: ID, mimetype: String, encoding: String, _id: String, first: Int, offset: Int, orderBy: [_FileOrdering], filter: _FileFilter): [File]
+  Node(uuid: ID, type: String, _id: String, first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
+  Rel(from: String, to: String, _id: String, first: Int, offset: Int, orderBy: [_RelOrdering], filter: _RelFilter): [Rel]
+  RST(_id: String, first: Int, offset: Int, orderBy: [_RSTOrdering], filter: _RSTFilter): [RST]
+}
+
+type Rel {
+  from: String
+  to: String
+  _id: String
+}
+
+type RST {
+  nodes(first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
+  nodeRels(first: Int, offset: Int, orderBy: [_RelOrdering], filter: _RelFilter): [Rel]
+  nodeContents(first: Int, offset: Int, orderBy: [_KeyValueContentOrdering], filter: _KeyValueContentFilter): [KeyValueContent]
+  nodeContentRels(first: Int, offset: Int, orderBy: [_RelOrdering], filter: _RelFilter): [Rel]
+  _id: String
 }
 
 type SOG {
@@ -548,3 +756,7 @@ type SOG {
   fogs(first: Int, offset: Int, orderBy: [_FOGOrdering], filter: _FOGFilter): [FOG]
   _id: String
 }
+
+scalar Upload
+
+scalar Void
