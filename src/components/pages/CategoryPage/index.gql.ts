@@ -1,27 +1,20 @@
 import { gql } from 'apollo-boost';
 
-export const RST = gql`
-  query RST($id: ID!) {
-    RecursiveSOGTree(uuid: $id) {
+export const TreeNode = gql`
+  query TreeNode($id: ID!) {
+    TreeNode(uuid: $id) {
       nodes {
-        type
+        title
         uuid
       }
-      nodeRels {
+      rels {
         from
         to
       }
-      nodeContents {
-        uuid
-        type
-        value
-        key
-        order
-      }
-      nodeContentRels {
-        from
-        to
-      }
+    }
+
+    GetCompletedNodes(nodeId: $id) {
+      uuid
     }
   }
 `;

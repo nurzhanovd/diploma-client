@@ -38,6 +38,10 @@
   &__status {
     font-size: 14px;
     color: var(--black);
+
+    &--complete {
+      color: lightgreen;
+    }
   }
 
   &__table-of-contents-title {

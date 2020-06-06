@@ -1,11 +1,18 @@
-import { Payload, ID, Data } from 'components/organisms/ExpandableCourse';
+export type NodeId = string | number;
+
+type RenderChildPayload = {
+  isLeaf: boolean;
+  isOpen: boolean;
+  childes: NodeId[];
+};
 
 export type Props = {
-  current: Data;
-  payload: Payload;
-  onClick: (id: number | string) => void;
-  isOpen: (id: ID) => boolean;
   isRoot: boolean;
   className?: string;
-  children?: (current: Data, Payload: Payload) => JSX.Element;
+  current: NodeId;
+  onClick: (id: NodeId) => void;
+  isOpen: (id: NodeId) => boolean;
+  children: (id: NodeId, payload: RenderChildPayload) => JSX.Element;
+  isLeaf: (id: NodeId) => boolean;
+  getChildes: (id: NodeId) => NodeId[];
 };

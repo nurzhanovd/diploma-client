@@ -1,11 +1,14 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import { useLazyQuery } from '@apollo/react-hooks';
+import debounce from 'debounce';
+import React, { ChangeEventHandler, FC, useCallback, useEffect, useState } from 'react';
 import { FormGroup, InputGroup, Label } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { Row } from 'components/molecules/Row';
 import { Payload } from 'components/organisms/ExpandableCourse';
 
-import { addNode } from './services/addNode';
-import { deleteNode } from './services/deleteNode';
+import { query } from './index.gql';
+import { Search, SearchVariables } from './__generated__/Search';
+
 import { Fog } from './libs/Fog';
 import { Props } from './props';
 import './styles.scss';
@@ -16,25 +19,29 @@ const init: Payload = {
     1: {
       id: 1,
       title: 'Frontend',
-      childes: [2, 3],
+      childes: ['2', '3'],
+      tableOfContents: [],
     },
     2: {
       id: 2,
-      parentId: 1,
+      parentId: '1',
       title: 'Javascript',
       childes: [],
+      tableOfContents: [],
     },
     3: {
       id: 3,
-      parentId: 1,
+      parentId: '1',
       title: 'CSS',
-      childes: [4],
+      childes: ['4'],
+      tableOfContents: [],
     },
     4: {
       id: 4,
-      parentId: 3,
+      parentId: '3',
       title: 'Display',
       childes: [],
+      tableOfContents: [],
     },
   },
 };
@@ -43,20 +50,31 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
   const { className, ...rest } = props;
   const [open, setOpen] = useState<Set<string | number>>(new Set());
   const [payload, setPayload] = useState<Payload>(init);
+  const [searchString, setSearchString] = useState('');
+
+  const [searchNodes, { data, loading }] = useLazyQuery<Search, SearchVariables>(query);
+
+  const onChange: ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
+    setSearchString(e.target.value);
+  }, []);
+
+  const fetchNodes = useCallback(
+    debounce((str: string) => {
+      searchNodes({
+        variables: { searchString: str, rootId: 'cc7caae6-1a6d-4330-8ba2-e7bb76ca51d4' },
+      });
+    }, 250),
+    [],
+  );
+
+  useEffect(() => {
+    if (searchString) {
+      console.log('searchString', searchString);
+      fetchNodes(searchString);
+    }
+  }, [searchString]);
 
   const [fogs] = useState([{ text: 'Strategy' }, { text: 'Template Method' }]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setPayload((p) => addNode(p, { id: 5, parentId: 3, title: 'Kek2', childes: [] }, 3));
-    }, 5000);
-  }, []);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setPayload((p) => deleteNode(p, { id: 5, parentId: 3, title: 'Kek2', childes: [] }));
-    }, 8000);
-  }, []);
 
   const onClick = useCallback(
     (id: string | number) => {
@@ -86,17 +104,20 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
           Create new one
         </button>
       </header>
-      <div style={{ height: 5000 }} className="container-fluid road-map__tree mt-3 d-flex justify-content-between mt-5">
-        <div className="col-6">
-          <Row
-            current={payload.data[payload.root]}
-            payload={payload}
-            onClick={onClick}
-            isOpen={isOpen}
-            isRoot={true}
-          />
+      <div
+        style={{ height: 5000 }}
+        className="container-fluid road-map__tree mt-3 d-flex justify-content-between mt-5"
+      >
+        <div className="col-7">
+          {/* <Row */}
+          {/*  current={payload.data[payload.root]} */}
+          {/*  payload={payload} */}
+          {/*  onClick={onClick} */}
+          {/*  isOpen={isOpen} */}
+          {/*  isRoot={true} */}
+          {/* /> */}
         </div>
-        <div className="col-6">
+        <div className="col-5">
           <div className="d-flex flex-column road-map__form">
             <Label>
               Category (required)
@@ -115,7 +136,7 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
               labelFor="text-input"
               labelInfo="(required)"
             >
-              <InputGroup leftIcon="search" id="search" />
+              <InputGroup onChange={onChange} leftIcon="search" id="search" />
             </FormGroup>
 
             <div className="d-flex flex-column mt-5">

@@ -7,7 +7,9 @@ type Action = {
 
 export type Props = HTMLAttributes<HTMLDivElement> & {
   nodeId: number | string;
-  breadcrumb: string[];
+  breadcrumb?: string[];
   text: string;
   actions: Action[];
+  tableOfContents: string[];
+  isComplete?: boolean;
 };

@@ -1,24 +1,23 @@
 import { declareAction, declareAtom } from '@reatom/core';
+import mock from 'components/pages/CategoryPage/mock';
 
-type Node = {
-  id: string;
-  parentId?: string;
+export type ID = number | string;
+
+export type Node = {
+  id: ID;
+  parentId?: ID;
   root?: boolean;
+  childes: ID[];
+  title: string;
+  completed?: boolean;
+  tableOfContents: string[];
 };
 
-type Relation = Record<string, ReadonlyArray<string>>;
+export type Relation = Record<string, ReadonlyArray<string>>;
 
-export const addNode = declareAction<Record<string, Node>>();
-export const nodes = declareAtom<Record<string, Node>>('Node', {}, (on) => [
-  on(addNode, (state, payload) => ({
-    ...state,
-    ...payload,
-  })),
-]);
-
-export const addRelation = declareAction<Relation>();
-export const nodeRelations = declareAtom<Relation>('NodeRelation', {}, (on) => [
-  on(addRelation, (state, payload) => ({
+export const addNodesAction = declareAction<Record<string, Node>>();
+export const nodesAtom = declareAtom<Record<string, Node>>('Node', {}, (on) => [
+  on(addNodesAction, (state, payload) => ({
     ...state,
     ...payload,
   })),

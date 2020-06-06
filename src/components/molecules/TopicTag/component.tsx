@@ -15,7 +15,7 @@ import { Props } from './props';
 import './styles.scss';
 
 export const TopicTag: FC<Props> = (props) => {
-  const { text, nodeId, breadCrumb, className, ...rest } = props;
+  const { text, isComplete, className, children, ...rest } = props;
   const [openInfoBlock, setInfoBlockOpen] = useState(false);
   const toggleInfoBlock: MouseEventHandler<HTMLSpanElement> = (e) => {
     e.preventDefault();
@@ -23,17 +23,6 @@ export const TopicTag: FC<Props> = (props) => {
     setInfoBlockOpen(!openInfoBlock);
   };
   const ref = createRef<HTMLDivElement>();
-
-  const { push } = useHistory();
-  const onClick = useCallback(() => push(`/main/learn/${nodeId}`), [push, nodeId]);
-
-  const actions = useMemo(
-    () => [
-      { text: 'Open topic', onClick },
-      { text: 'I already know it, skip', onClick },
-    ],
-    [onClick],
-  );
 
   const isOutSideClick = useCallback(
     (event) => {
@@ -50,17 +39,14 @@ export const TopicTag: FC<Props> = (props) => {
   }, [isOutSideClick]);
 
   return (
-    <div onClick={onClick} className={classNames('topic-tag d-flex', className)} {...rest}>
+    <div
+      className={classNames('topic-tag d-flex', className, { 'topic-tag--completed': isComplete })}
+      {...rest}
+    >
       <span>{text}</span>
       {openInfoBlock && (
         <div ref={ref}>
-          <InfoBlock
-            className="topic-tag__content-block"
-            breadcrumb={breadCrumb}
-            nodeId={nodeId}
-            text={text}
-            actions={actions}
-          />
+          <div className="topic-tag__content-block">{children}</div>
         </div>
       )}
       <span onClick={toggleInfoBlock} className="topic-tag__table-of-contents p-2 ml-auto" />

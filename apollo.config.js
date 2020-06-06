@@ -4,7 +4,10 @@ module.exports = {
     excludes: 'schema.graphql',
     includes: '**/*.gql.ts',
     service: {
-      url: 'https://api-kf.arpanetus.com/graphql',
+      url: 'http://localhost:4001/graphql',
+      headers: {
+        authorization: 'Bearer ZOWI',
+      },
     },
   },
 };

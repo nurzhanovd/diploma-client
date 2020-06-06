@@ -3,44 +3,42 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { ExpandableCourse } from 'components/organisms/ExpandableCourse';
 import { useQuery } from '@apollo/react-hooks';
-import { payload } from 'core/mocks/payload';
-import { nodeRelations, addRelation as addNodeRelation, nodes, addNode } from 'store/nodes';
+import { nodesAtom, addNodesAction } from 'store/nodes';
 import { useAction, useAtom } from '@reatom/react';
-import {
-  addContent,
-  addRelation as addContentRelation,
-  content,
-  contentRelation,
-} from 'store/content';
 import { Props } from './props';
-import { RST } from './index.gql';
-import { RST as Category, RSTVariables } from './__generated__/RST';
+import { TreeNode } from './index.gql';
+import { TreeNode as RST, TreeNodeVariables } from './__generated__/TreeNode';
 import './styles.scss';
 import { parseRST } from './services/parseSog';
 
 const tags = ['IT & Software', 'Software Engineering', 'Programming Languages'];
 
 export const CategoryPage: FC<Props> = (props) => {
-  const nodeAtom = useAtom(nodes);
-  const addNodeAction = useAction(addNode);
-  const addNodeRelationAction = useAction(addNodeRelation);
-  const addContentAction = useAction(addContent);
-  const addContentRelationAction = useAction(addContentRelation);
+  const nodes = useAtom(nodesAtom);
+  const addNodes = useAction(addNodesAction);
   const { id } = useParams();
   const { push } = useHistory();
   const onBackClick = useCallback(() => push('/main/categories'), [push]);
   const onRoadMapClick = useCallback(() => push(`/main/create-roadmap?category=${id}`), [push, id]);
-  const { data } = useQuery<Category, RSTVariables>(RST, { variables: { id } });
+
+  const { data, loading } = useQuery<RST, TreeNodeVariables>(TreeNode, { variables: { id } });
+
   useEffect(() => {
     if (data) {
-      const parsed = parseRST(data.RecursiveSOGTree);
-      console.log(parsed);
+      const parsed = parseRST(data);
+      if (parsed) {
+        addNodes(Object.fromEntries(parsed.map((n) => [n.id, n])));
+      }
     }
   }, [data]);
 
+  const current = useMemo(() => {
+    return nodes[id];
+  }, [nodes]);
+
   return (
     <div className="category-page container d-flex flex-column">
-      <h1 className="mb-3 mt-4">Computer Science Category</h1>
+      {current && current.title && <h1 className="mb-3 mt-4">{`${current.title} Category`}</h1>}
       <div onClick={onBackClick} className="category-page__all-categories-link px-2 py-1">
         <Icon icon="chevron-left" iconSize={Icon.SIZE_STANDARD} intent={Intent.NONE} />
         All categories
@@ -57,9 +55,9 @@ export const CategoryPage: FC<Props> = (props) => {
         ))}
       </div>
       <div className="d-flex flex-column">
-        {[payload].map((n) => (
-          <ExpandableCourse rootId={id} className="w-100 mb-4" data={n} />
-        ))}
+        {nodes[id] && (
+          <ExpandableCourse rootId={id} className="w-100 mb-4" />
+        )}
       </div>
     </div>
   );

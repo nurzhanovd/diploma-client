@@ -50,7 +50,7 @@ export const CategoriesPage: FC<Props> = () => {
   const [list, setList] = useState(mock);
   const toggleSuggestions = useCallback(() => setShowSuggestions((p) => !p), []);
   const { data: rawData } = useQuery<QueryCategoriesType>(QueryCategories);
-  const data = rawData?.SOG?.map(parseGQLPayload) || [];
+  const data = rawData?.Node?.map(parseGQLPayload) || [];
 
   const onChange: ChangeEventHandler<HTMLSelectElement> = useCallback((e) => {
     setSelected(+e.target.value);
