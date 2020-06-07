@@ -23,54 +23,48 @@ export const nodesAtom = declareAtom<Record<string, Node>>('Node', {}, (on) => [
   })),
 ]);
 
-type RoadMapNode = {
-  type: 'Roadmap';
-  title: string;
-  id: ID;
-  childes: ID[];
-  parentId?: ID;
-};
-
-type UnionNode = RoadMapNode | ({ type: 'Node' } & Node);
-
-type RoadMap = {
-  data: Record<string, UnionNode>;
-  root?: ID;
-};
+type RoadMapNode =
+  | {
+      type: 'Roadmap';
+      title: string;
+      id: ID;
+      childes: ID[];
+      parentId?: ID;
+    }
+  | ({ type: 'Node' } & Node);
 
 export const addNodesToRoadMapAction = declareAction<Record<ID, RoadMapNode>>();
-export const addRootNodeAction = declareAction<RoadMapNode>();
 export const changeRoadMapTitleAction = declareAction<{ id: ID; title: string }>();
 export const addNodeToRoadmapNodeAction = declareAction<{ node: Node; roadmapId: ID }>();
 export const addNewRoadMapNodeAction = declareAction<{ parentRoadMap: ID }>();
 export const deleteNodeFromRoadMapAction = declareAction<ID>();
-export const roadMapNodesAtom = declareAtom<RoadMap>('Node', { data: {} }, (on) => [
-  on(addRootNodeAction, (state, node) => ({
-    root: node.id,
-    data: {
-      [node.id]: { ...node },
+export const roadMapNodesAtom = declareAtom<Record<string, RoadMapNode>>(
+  'Node',
+  {
+    1: {
+      type: 'Roadmap',
+      title: 'Roadmap',
+      id: 1,
+      childes: [],
     },
-  })),
-  on(addNodesToRoadMapAction, (state, payload) => ({
-    ...state,
-    ...payload,
-  })),
-  on(changeRoadMapTitleAction, (state, { id, title }) => ({
-    ...state,
-    data: {
-      ...state.data,
+  },
+  (on) => [
+    on(addNodesToRoadMapAction, (state, payload) => ({
+      ...state,
+      ...payload,
+    })),
+    on(changeRoadMapTitleAction, (state, { id, title }) => ({
+      ...state,
       [id]: {
-        ...state.data![id],
+        ...state[id],
         title,
       },
-    },
-  })),
-  on(addNodeToRoadmapNodeAction, (state, { node, roadmapId }) => {
-    const { childes: oldChildes, ...rest } = state.data![roadmapId];
-    const childes = [...oldChildes, node.id];
-    return {
-      ...state,
-      data: {
+    })),
+    on(addNodeToRoadmapNodeAction, (state, { node, roadmapId }) => {
+      const { childes: oldChildes, ...rest } = state[roadmapId];
+      const childes = [...oldChildes, node.id];
+      return {
+        ...state,
         [roadmapId]: {
           ...rest,
           childes,
@@ -80,17 +74,14 @@ export const roadMapNodesAtom = declareAtom<RoadMap>('Node', { data: {} }, (on) 
           type: 'Node',
           parentId: roadmapId,
         },
-      },
-    };
-  }),
-  on(addNewRoadMapNodeAction, (state, { parentRoadMap }) => {
-    const id = uuid();
-    const { childes: oldChildes, ...rest } = state.data![parentRoadMap];
-    const childes = [...oldChildes, id];
-    return {
-      ...state,
-      data: {
-        ...state.data,
+      };
+    }),
+    on(addNewRoadMapNodeAction, (state, { parentRoadMap }) => {
+      const id = uuid();
+      const { childes: oldChildes, ...rest } = state[parentRoadMap];
+      const childes = [...oldChildes, id];
+      return {
+        ...state,
         [parentRoadMap]: {
           ...rest,
           childes,
@@ -102,21 +93,18 @@ export const roadMapNodesAtom = declareAtom<RoadMap>('Node', { data: {} }, (on) 
           parentId: parentRoadMap,
           type: 'Roadmap',
         },
-      },
-    };
-  }),
-  on(deleteNodeFromRoadMapAction, (state, nodeId) => {
-    const { parentId } = state.data![nodeId];
-    const { childes, ...rest } = state.data![parentId!] as RoadMapNode;
-    return {
-      ...state,
-      data: {
-        ...state.data,
+      };
+    }),
+    on(deleteNodeFromRoadMapAction, (state, nodeId) => {
+      const { parentId } = state[nodeId];
+      const { childes, ...rest } = state[parentId!] as RoadMapNode;
+      return {
+        ...state,
         [parentId!]: {
           ...rest,
           childes: childes.filter((n) => n !== nodeId),
         },
-      },
-    };
-  }),
-]);
+      };
+    }),
+  ],
+);
