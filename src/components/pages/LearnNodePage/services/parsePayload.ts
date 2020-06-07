@@ -1,5 +1,5 @@
 import { content } from 'core/mocks/content';
-import { Node_Node as Node, Node as Payload } from '../__generated__/Node';
+import { Node as Payload } from '../__generated__/Node';
 
 const markdownTemp = content[1].markdown;
 

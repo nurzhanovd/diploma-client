@@ -9,16 +9,16 @@ import { Props } from './props';
 import { getBreadCrumb } from './services/getBreadCrumb';
 
 export const TreeNode: FC<Props> = (props) => {
-  const { id } = props;
+  const { id, className } = props;
   const nodes = useAtom(nodesAtom);
   const { push } = useHistory();
   const [breadCrumb, setBreadcrumb] = useState<string[]>([]);
-  const { title, tableOfContents, completed } = useMemo(() => nodes[id], [id]);
-  const handleNodeClick = useCallback(() => push(`/main/learn/${id}`), [id]);
+  const { title, tableOfContents, completed } = useMemo(() => nodes[id], [id, nodes]);
+  const handleNodeClick = useCallback(() => push(`/main/learn/${id}`), [id, push]);
 
   useEffect(() => {
     setBreadcrumb((prev) => (prev ? getBreadCrumb(nodes, nodes[id]) : prev));
-  }, [nodes]);
+  }, [nodes, id]);
 
   const status = useMemo(() => {
     const rowChildes = nodes[id].childes;
@@ -26,7 +26,7 @@ export const TreeNode: FC<Props> = (props) => {
     return rowChildes.length ? `${doneLength}/${rowChildes.length}` : '';
   }, [id, nodes]);
   return (
-    <TopicTag text={`${title} ${status}`}>
+    <TopicTag className={className} text={`${title} ${status}`}>
       <InfoBlock
         nodeId={id}
         text={title}

@@ -10,6 +10,6 @@ export type Props = HTMLAttributes<HTMLDivElement> & {
   breadcrumb?: string[];
   text: string;
   actions: Action[];
-  tableOfContents: string[];
+  tableOfContents?: string[];
   isComplete?: boolean;
 };

@@ -30,7 +30,7 @@ export const CategoryPage: FC<Props> = (props) => {
         addNodes(Object.fromEntries(parsed.map((n) => [n.id, n])));
       }
     }
-  }, [data]);
+  }, [data, addNodes, parseRST]);
 
   const current = useMemo(() => {
     return nodes[id];
@@ -55,9 +55,7 @@ export const CategoryPage: FC<Props> = (props) => {
         ))}
       </div>
       <div className="d-flex flex-column">
-        {nodes[id] && (
-          <ExpandableCourse rootId={id} className="w-100 mb-4" />
-        )}
+        {nodes[id] && <ExpandableCourse rootId={id} className="w-100 mb-4" />}
       </div>
     </div>
   );

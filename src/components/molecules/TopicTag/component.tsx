@@ -1,6 +1,5 @@
 import React, {
   FC,
-  useMemo,
   createRef,
   useState,
   useCallback,
@@ -8,9 +7,6 @@ import React, {
   MouseEventHandler,
 } from 'react';
 import classNames from 'classnames';
-import { InfoBlock } from 'components/molecules/InfoBlock';
-import { useHistory } from 'react-router';
-
 import { Props } from './props';
 import './styles.scss';
 
@@ -18,6 +14,7 @@ export const TopicTag: FC<Props> = (props) => {
   const { text, isComplete, className, children, ...rest } = props;
   const [openInfoBlock, setInfoBlockOpen] = useState(false);
   const toggleInfoBlock: MouseEventHandler<HTMLSpanElement> = (e) => {
+    console.log('here');
     e.preventDefault();
     e.stopPropagation();
     setInfoBlockOpen(!openInfoBlock);
@@ -40,16 +37,22 @@ export const TopicTag: FC<Props> = (props) => {
 
   return (
     <div
-      className={classNames('topic-tag d-flex', className, { 'topic-tag--completed': isComplete })}
+      className={classNames('d-flex topic-tag__wrapper', className, {
+        'topic-tag__wrapper--completed': isComplete,
+      })}
       {...rest}
     >
-      <span>{text}</span>
+      <div className={classNames('topic-tag d-flex flex-grow-1')}>
+        <span>{text}</span>
+      </div>
       {openInfoBlock && (
-        <div ref={ref}>
-          <div className="topic-tag__content-block">{children}</div>
+        <div ref={ref} className="topic-tag__content-block">
+          {children}
         </div>
       )}
-      <span onClick={toggleInfoBlock} className="topic-tag__table-of-contents p-2 ml-auto" />
+      <div onClick={toggleInfoBlock}>
+        <div className="topic-tag__table-of-contents p-2 ml-auto" />
+      </div>
     </div>
   );
 };

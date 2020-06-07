@@ -7,9 +7,9 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { client } from 'core/graphql';
 
 import { expandableCourse } from 'store/courses';
-import { nodesAtom } from 'store/nodes';
+import { nodesAtom, roadMapNodesAtom } from 'store/nodes';
 
-const store = createStore(combine({ expandableCourse, nodesAtom }));
+const store = createStore(combine({ expandableCourse, nodesAtom, roadMapNodesAtom }));
 
 export const App = () => {
   useEffect(() => connectReduxDevtools(store), []);

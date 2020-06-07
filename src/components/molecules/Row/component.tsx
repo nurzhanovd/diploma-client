@@ -9,15 +9,15 @@ export const Row: FC<Props> = (props) => {
   const { isRoot, current, children, onClick, isLeaf: checkIsLeaf, getChildes, className } = props;
 
   const isOpen = useMemo(() => props.isOpen(current), [props, current]);
-  const isLeaf = useMemo(() => checkIsLeaf(current), [current]);
-  const childes = useMemo(() => getChildes(current), [current]);
+  const isLeaf = useMemo(() => checkIsLeaf(current), [current, checkIsLeaf]);
+  const childes = useMemo(() => getChildes(current), [current, getChildes]);
 
   const handleClick = useCallback<MouseEventHandler<HTMLDivElement>>(
     (e) => {
       e.stopPropagation();
       onClick(current);
     },
-    [props],
+    [current, onClick],
   );
   return (
     <div
@@ -28,8 +28,8 @@ export const Row: FC<Props> = (props) => {
         'justify-content-between': !isOpen,
       })}
     >
-      <div className="row-node__edge w-100" onClick={handleClick}>
-        <span className="image" />
+      <div className="row-node__edge d-flex align-items-center w-100">
+        <span className="image" onClick={handleClick} />
         <div className={classNames('flex-grow-1', { 'ml-3': !isLeaf })}>
           {children(current, { isLeaf, isOpen, childes })}
         </div>

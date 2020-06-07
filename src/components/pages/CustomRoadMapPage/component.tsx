@@ -1,62 +1,89 @@
 import { useLazyQuery } from '@apollo/react-hooks';
 import debounce from 'debounce';
-import React, { ChangeEventHandler, FC, useCallback, useEffect, useState } from 'react';
-import { FormGroup, InputGroup, Label } from '@blueprintjs/core';
+import React, { ChangeEventHandler, FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { TopicTag } from 'components/molecules/TopicTag';
+import { InfoBlock } from 'components/molecules/InfoBlock';
+import { FormGroup, InputGroup, Label, Button } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { Row } from 'components/molecules/Row';
-import { Payload } from 'components/organisms/ExpandableCourse';
+import {
+  roadMapNodesAtom,
+  addNodesToRoadMapAction,
+  addNodeToRoadmapNodeAction,
+  addNewRoadMapNodeAction,
+  ID,
+  changeRoadMapTitleAction,
+} from 'store/nodes';
 
+import { useAction, useAtom } from '@reatom/react';
 import { query } from './index.gql';
 import { Search, SearchVariables } from './__generated__/Search';
 
-import { Fog } from './libs/Fog';
 import { Props } from './props';
 import './styles.scss';
-
-const init: Payload = {
-  root: 1,
-  data: {
-    1: {
-      id: 1,
-      title: 'Frontend',
-      childes: ['2', '3'],
-      tableOfContents: [],
-    },
-    2: {
-      id: 2,
-      parentId: '1',
-      title: 'Javascript',
-      childes: [],
-      tableOfContents: [],
-    },
-    3: {
-      id: 3,
-      parentId: '1',
-      title: 'CSS',
-      childes: ['4'],
-      tableOfContents: [],
-    },
-    4: {
-      id: 4,
-      parentId: '3',
-      title: 'Display',
-      childes: [],
-      tableOfContents: [],
-    },
-  },
-};
+import { Row } from '../../molecules/Row';
 
 export const CustomRoadMapPage: FC<Props> = (props) => {
+  const nodes = useAtom(roadMapNodesAtom);
+  const addNodes = useAction(addNodesToRoadMapAction);
+  const changeRoadMapTitle = useAction(changeRoadMapTitleAction);
+  const addNodeToRoadmap = useAction(addNodeToRoadmapNodeAction);
+  const addNewRoadMapNode = useAction(addNewRoadMapNodeAction);
   const { className, ...rest } = props;
-  const [open, setOpen] = useState<Set<string | number>>(new Set());
-  const [payload, setPayload] = useState<Payload>(init);
+  const [open, setOpen] = useState<Set<ID>>(new Set());
   const [searchString, setSearchString] = useState('');
 
-  const [searchNodes, { data, loading }] = useLazyQuery<Search, SearchVariables>(query);
+  const [roadmapTitle, setRoadmapTitle] = useState<string>('New Roadmap');
+  const [selectedRoadMapNode, setSelectedRoadMapNode] = useState<ID>(1);
+  const [editableRoadMapNode, setEditableRoadMapNode] = useState<ID>(1);
+  const [searchNodes, { data: rawSearchNodes, loading }] = useLazyQuery<Search, SearchVariables>(
+    query,
+  );
 
-  const onChange: ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
+  const selectRoadMapNode = useCallback(
+    (id: ID): any => (e: any) => {
+      e.stopPropagation();
+      e.preventDefault();
+      setSelectedRoadMapNode(id);
+    },
+    [setSelectedRoadMapNode],
+  );
+  const selectEditableMapNode = useCallback(
+    (id: ID): any => (e: any) => {
+      e.stopPropagation();
+      e.preventDefault();
+      setEditableRoadMapNode(id);
+    },
+    [setEditableRoadMapNode],
+  );
+  const addNewRoadmapNode = useCallback(
+    (id: ID): any => (e: any) => {
+      e.preventDefault();
+      e.stopPropagation();
+      addNewRoadMapNode({ parentRoadMap: id });
+    },
+    [setEditableRoadMapNode],
+  );
+  const updateRoadMapField: any = useCallback(
+    (e: any) => {
+      e.stopPropagation();
+      const v = roadmapTitle.trim();
+      if (v && editableRoadMapNode) {
+        changeRoadMapTitle({ id: editableRoadMapNode, title: v });
+        setEditableRoadMapNode('');
+      }
+    },
+    [roadmapTitle],
+  );
+
+  const onSearchChange = useCallback((e) => {
     setSearchString(e.target.value);
   }, []);
+  const onRoadMapTitleChange: ChangeEventHandler<HTMLInputElement> = useCallback(
+    (e) => {
+      setRoadmapTitle(e.target.value);
+    },
+    [setRoadmapTitle],
+  );
 
   const fetchNodes = useCallback(
     debounce((str: string) => {
@@ -69,15 +96,38 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
 
   useEffect(() => {
     if (searchString) {
-      console.log('searchString', searchString);
       fetchNodes(searchString);
     }
   }, [searchString]);
 
-  const [fogs] = useState([{ text: 'Strategy' }, { text: 'Template Method' }]);
+  const foundNodes = useMemo(() => {
+    if (rawSearchNodes) {
+      return (
+        rawSearchNodes.RoadMapSearch?.map((n) => ({
+          id: n?.uuid || '',
+          title: n?.title || '',
+          tableOfContents: [],
+          childes: [],
+          type: 'Node',
+        })) || []
+      );
+    }
+    return [];
+  }, [rawSearchNodes]);
 
+  useEffect(() => {
+    if (foundNodes && foundNodes.length) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      addNodes(Object.fromEntries(foundNodes.map((n) => [n.id, n])));
+    }
+  }, [foundNodes]);
+
+  const isOpen = (id: ID) => open.has(id);
+  const isLeaf = (id: ID) => !nodes[id]?.childes;
+  const getChildes = (id: ID) => nodes[id]?.childes;
   const onClick = useCallback(
-    (id: string | number) => {
+    (id: ID) => {
       if (open.has(id)) {
         open.delete(id);
       } else {
@@ -88,7 +138,11 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
     },
     [open],
   );
-  const isOpen = (id: any) => open.has(id);
+
+  const onAddRoadMapClick = (id: ID) => {
+    addNodeToRoadmap({ nodeId: id, roadmapId: selectedRoadMapNode });
+  };
+
   return (
     <div className={classNames('d-flex flex-column road-map', className)} {...rest}>
       <header className="container-fluid road-map__header d-flex flex-column">
@@ -109,13 +163,52 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
         className="container-fluid road-map__tree mt-3 d-flex justify-content-between mt-5"
       >
         <div className="col-7">
-          {/* <Row */}
-          {/*  current={payload.data[payload.root]} */}
-          {/*  payload={payload} */}
-          {/*  onClick={onClick} */}
-          {/*  isOpen={isOpen} */}
-          {/*  isRoot={true} */}
-          {/* /> */}
+          <Row
+            isRoot={true}
+            current={1}
+            onClick={onClick}
+            isOpen={isOpen}
+            isLeaf={isLeaf}
+            getChildes={getChildes}
+          >
+            {(id) => {
+              const { title, type } = nodes[id];
+              const isEdit = id === editableRoadMapNode;
+              if (type === 'Roadmap') {
+                return (
+                  <div className="d-flex">
+                    <FormGroup className="mb-0 mr-3" labelInfo="(required)">
+                      <InputGroup
+                        onChange={onRoadMapTitleChange}
+                        disabled={!isEdit}
+                        value={isEdit ? roadmapTitle : title}
+                      />
+                    </FormGroup>
+                    <Button onClick={selectRoadMapNode(id)} className="mr-3" icon="select">
+                      Pick
+                    </Button>
+                    {isEdit ? (
+                      <Button onClick={updateRoadMapField} className="mr-3" icon="edit">
+                        Save
+                      </Button>
+                    ) : (
+                      <Button onClick={selectEditableMapNode(id)} className="mr-3" icon="edit">
+                        Edit
+                      </Button>
+                    )}
+                    <Button onClick={addNewRoadmapNode(id)} className="mr-3" icon="git-new-branch">
+                      Add branch
+                    </Button>
+                  </div>
+                );
+              }
+              return (
+                <TopicTag className="road-map__foundNodes mb-3 mr-3" key={id} text={title}>
+                  <InfoBlock nodeId={id} text={title} actions={[]} tableOfContents={[]} />
+                </TopicTag>
+              );
+            }}
+          </Row>
         </div>
         <div className="col-5">
           <div className="d-flex flex-column road-map__form">
@@ -136,12 +229,24 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
               labelFor="text-input"
               labelInfo="(required)"
             >
-              <InputGroup onChange={onChange} leftIcon="search" id="search" />
+              <InputGroup onChange={onSearchChange} leftIcon="search" id="search" />
             </FormGroup>
 
-            <div className="d-flex flex-column mt-5">
-              {fogs.map((n) => (
-                <Fog text={n.text} onClick={console.log} />
+            <div className="d-flex flex-wrap mt-5">
+              {foundNodes.map((n) => (
+                <TopicTag className="road-map__foundNodes mb-3 mr-3" key={n.id} text={n.title}>
+                  <InfoBlock
+                    nodeId={n.id}
+                    text={n.title}
+                    actions={[
+                      {
+                        text: `Add to ${nodes[selectedRoadMapNode].title}`,
+                        onClick: onAddRoadMapClick,
+                      },
+                    ]}
+                    tableOfContents={n.tableOfContents}
+                  />
+                </TopicTag>
               ))}
             </div>
           </div>

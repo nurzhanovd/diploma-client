@@ -1,28 +1,39 @@
+.topic-tag__wrapper {
+  position: relative;
+
+  & > * {
+    background: #ededed;
+  }
+
+  &--completed {
+    & > * {
+      background: #a6ddaf;
+    }
+  }
+}
 .topic-tag {
-  z-index: -1;
+  z-index: -5;
   background: #ededed;
   border-radius: 2px;
-  position: relative;
   padding: 4px;
   font-size: 12px;
   cursor: pointer;
 
-  &--completed {
-    background: #a6ddaf;
-  }
+
 
   &__content-block {
+    z-index: 1;
     position: absolute;
     top: 30px;
     left: 0;
   }
 
   &__table-of-contents {
+    z-index: 100;
     width: 20px;
     margin-right: 5px;
     cursor: pointer;
     height: 15px;
-    top: 27px;
     background: url("/images/dots.svg");
     background-size: cover;
   }

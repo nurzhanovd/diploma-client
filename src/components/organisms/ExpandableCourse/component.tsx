@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect } from "react";
+import React, { FC, useCallback, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { expandableCourse, nodeClick } from 'store/courses';
 import { useAction, useAtom } from '@reatom/react';
@@ -14,15 +14,15 @@ export const ExpandableCourse: FC<Props> = (props) => {
   const courses = useAtom(expandableCourse);
   const nodes = useAtom(nodesAtom);
   const isOpen = useCallback((id: NodeId) => courses.has(id), [courses]);
-  const getChildes = useCallback((id: NodeId) => nodes[id].childes as any, []);
-  const isLeaf = useCallback((id: NodeId) => Boolean(!nodes[id].childes.length), []);
+  const getChildes = useCallback((id: NodeId) => nodes[id].childes as any, [nodes]);
+  const isLeaf = useCallback((id: NodeId) => Boolean(!nodes[id].childes.length), [nodes]);
   const onClick = useAction((id) => nodeClick({ id }));
 
   useEffect(() => {
     if (!isOpen(rootId)) {
       onClick(rootId);
     }
-  }, [rootId]);
+  }, [rootId, isOpen, onClick]);
   return (
     <Wrapper className={className}>
       <Row
