@@ -5,8 +5,11 @@ import { InfoBlock } from 'components/molecules/InfoBlock';
 import { TopicTag } from 'components/molecules/TopicTag';
 
 import { useHistory } from 'react-router';
+import classNames from 'classnames';
 import { Props } from './props';
 import { getBreadCrumb } from './services/getBreadCrumb';
+
+import './styles.scss';
 
 export const TreeNode: FC<Props> = (props) => {
   const { id, className } = props;
@@ -26,9 +29,9 @@ export const TreeNode: FC<Props> = (props) => {
     return rowChildes.length ? `${doneLength}/${rowChildes.length}` : '';
   }, [id, nodes]);
   return (
-    <TopicTag className={classNamesad} text={`${title} ${status}`}>
+    <TopicTag className={classNames(className, { success: completed })} text={`${title} ${status}`}>
       <InfoBlock
-        nodeId={id}ass
+        nodeId={id}
         text={title}
         breadcrumb={breadCrumb}
         tableOfContents={tableOfContents}

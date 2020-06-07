@@ -42,6 +42,11 @@ directive @connection(
   filter: [String!]
 ) on FIELD
 
+type _AddLeafParentPayload {
+  from: Node
+  to: Leaf
+}
+
 type _AddNodeChildesPayload {
   from: Node
   to: Node
@@ -277,6 +282,71 @@ enum _GenericSearchResultOrdering {
   type_desc
   _id_asc
   _id_desc
+}
+
+input _LeafFilter {
+  AND: [_LeafFilter!]
+  OR: [_LeafFilter!]
+  uuid: ID
+  uuid_not: ID
+  uuid_in: [ID!]
+  uuid_not_in: [ID!]
+  uuid_contains: ID
+  uuid_not_contains: ID
+  uuid_starts_with: ID
+  uuid_not_starts_with: ID
+  uuid_ends_with: ID
+  uuid_not_ends_with: ID
+  root: Boolean
+  root_not: Boolean
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  parent: _NodeFilter
+  parent_not: _NodeFilter
+  parent_in: [_NodeFilter!]
+  parent_not_in: [_NodeFilter!]
+}
+
+input _LeafInput {
+  uuid: ID!
+}
+
+enum _LeafOrdering {
+  uuid_asc
+  uuid_desc
+  root_asc
+  root_desc
+  title_asc
+  title_desc
+  description_asc
+  description_desc
+  isComplete_asc
+  isComplete_desc
+  _id_asc
+  _id_desc
+}
+
+type _MergeLeafParentPayload {
+  from: Node
+  to: Leaf
 }
 
 type _MergeNodeChildesPayload {
@@ -542,6 +612,11 @@ enum _RelationOrdering {
   _id_desc
 }
 
+type _RemoveLeafParentPayload {
+  from: Node
+  to: Leaf
+}
+
 type _RemoveNodeChildesPayload {
   from: Node
   to: Node
@@ -644,6 +719,18 @@ type GenericSearchResult {
   _id: String
 }
 
+type Leaf {
+  uuid: ID!
+  root: Boolean
+  title: String!
+  description: String
+  content: [String]
+  parent(filter: _NodeFilter): Node
+  isComplete: Boolean
+  neighbours(first: Int, offset: Int, orderBy: [_NodeOrdering]): [Node]
+  _id: String
+}
+
 type Mutation {
   DeleteFileAndRemoveFromDb(filename: ID!): File
   UploadFile(file: Upload!): File!
@@ -651,6 +738,7 @@ type Mutation {
   SignIn(login: String!, password: String!): AuthPayload
   FulfillNode(uuid: ID!): Boolean
   CreateRoadMap: [Node]
+  MergeUserWithTags(tags: [String]): Boolean
   CreateFile(filename: ID, mimetype: String!, encoding: String!): File
   UpdateFile(filename: ID!, mimetype: String, encoding: String): File
   DeleteFile(filename: ID!): File
@@ -665,6 +753,13 @@ type Mutation {
   UpdateNode(uuid: ID!, root: Boolean, title: String, description: String, content: [String]): Node
   DeleteNode(uuid: ID!): Node
   MergeNode(uuid: ID!, root: Boolean, title: String, description: String, content: [String]): Node
+  AddLeafParent(from: _NodeInput!, to: _LeafInput!): _AddLeafParentPayload
+  RemoveLeafParent(from: _NodeInput!, to: _LeafInput!): _RemoveLeafParentPayload
+  MergeLeafParent(from: _NodeInput!, to: _LeafInput!): _MergeLeafParentPayload
+  CreateLeaf(uuid: ID, root: Boolean, title: String!, description: String, content: [String]): Leaf
+  UpdateLeaf(uuid: ID!, root: Boolean, title: String, description: String, content: [String]): Leaf
+  DeleteLeaf(uuid: ID!): Leaf
+  MergeLeaf(uuid: ID!, root: Boolean, title: String, description: String, content: [String]): Leaf
   AddTagFor(from: _TagInput!, to: _NodeInput!): _AddTagForPayload
   RemoveTagFor(from: _TagInput!, to: _NodeInput!): _RemoveTagForPayload
   MergeTagFor(from: _TagInput!, to: _NodeInput!): _MergeTagForPayload
@@ -713,9 +808,12 @@ type Query {
   SearchForNodesAndTags(searchString: String!, limit: Int, offset: Int, first: Int, orderBy: [_GenericSearchResultOrdering], filter: _GenericSearchResultFilter): [GenericSearchResult]
   CurrentUser(filter: _AuthPayloadFilter): AuthPayload
   GetCompletedNodes(nodeId: ID!, first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
-  RoadMapSearch(searchString: String!, rootId: ID!, first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
+  RoadMapSearch(searchString: String!, rootId: ID!, searchOnlyCompleted: Boolean, first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
+  InterestedTag(first: Int, offset: Int, orderBy: [_TagOrdering], filter: _TagFilter): [Tag]
+  SuggestedRelatedNodes(first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
   File(filename: ID, mimetype: String, encoding: String, _id: String, first: Int, offset: Int, orderBy: [_FileOrdering], filter: _FileFilter): [File]
   Node(uuid: ID, root: Boolean, title: String, description: String, content: String, isComplete: Boolean, _id: String, first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
+  Leaf(uuid: ID, root: Boolean, title: String, description: String, content: String, isComplete: Boolean, _id: String, first: Int, offset: Int, orderBy: [_LeafOrdering], filter: _LeafFilter): [Leaf]
   Tag(uuid: ID, title: String, _id: String, first: Int, offset: Int, orderBy: [_TagOrdering], filter: _TagFilter): [Tag]
   Relation(from: ID, to: ID, _id: String, first: Int, offset: Int, orderBy: [_RelationOrdering], filter: _RelationFilter): [Relation]
   TreeNodePayload(_id: String, first: Int, offset: Int, orderBy: [_TreeNodePayloadOrdering], filter: _TreeNodePayloadFilter): [TreeNodePayload]

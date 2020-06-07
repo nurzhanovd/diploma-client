@@ -1,9 +1,13 @@
-import { useQuery } from '@apollo/react-hooks';
-import React, { ChangeEventHandler, FC, useCallback, useEffect, useState } from 'react';
+import { useLazyQuery } from '@apollo/react-hooks';
+import React, { ChangeEventHandler, FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { CategoryCard } from 'components/molecules/CategoryCard';
 import { Switch } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
-import { QueryCategories as QueryCategoriesType } from './__generated__/QueryCategories';
+import Loader from 'react-loader-spinner';
+import {
+  QueryCategories as QueryCategoriesType,
+  QueryCategoriesVariables,
+} from './__generated__/QueryCategories';
 import { Props } from './props';
 import { QueryCategories } from './index.gql';
 import { parseGQLPayload } from './services/parseGQLPayload';
@@ -13,8 +17,18 @@ export const CategoriesPage: FC<Props> = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selected, setSelected] = useState(0);
   const toggleSuggestions = useCallback(() => setShowSuggestions((p) => !p), []);
-  const { data: rawData } = useQuery<QueryCategoriesType>(QueryCategories);
-  const data = rawData?.Node?.map(parseGQLPayload) || [];
+  const [fetchCategories, { data: rawData, loading }] = useLazyQuery<
+    QueryCategoriesType,
+    QueryCategoriesVariables
+  >(QueryCategories);
+  const data = useMemo(() => {
+    const k = showSuggestions ? rawData?.SuggestedRelatedNodes || [] : rawData?.Node;
+    return k?.map(parseGQLPayload);
+  }, [rawData]);
+
+  useEffect(() => {
+    fetchCategories({ variables: { suggestion: showSuggestions, default: !showSuggestions } });
+  }, [showSuggestions]);
 
   const onChange: ChangeEventHandler<HTMLSelectElement> = useCallback((e) => {
     setSelected(+e.target.value);
@@ -51,28 +65,29 @@ export const CategoriesPage: FC<Props> = () => {
           {showSuggestions ? 'Categories based on your suggestions' : 'Available categories'}
         </h2>
         <div className="d-flex row px-0">
-          {!showSuggestions ? (
+          {data ? (
             data?.map((n) => (
               <div className="col-4 mb-5" key={n.id}>
                 <CategoryCard {...n} />
               </div>
             ))
+          ) : loading ? (
+            <div
+              style={{ height: 400 }}
+              className="w-100 d-flex align-items-center justify-content-center"
+            >
+              <Loader color="#101113" type="Oval" />
+            </div>
           ) : (
-            <CategoryCard
-              text="Data Science"
-              description="Data science is an inter-disciplinary field that uses scientific methods, algorithms to extract knowledge data."
-              id={1}
-              image="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
-            />
+            <></>
           )}
         </div>
       </div>
-      <div className="container-fluid d-flex categories-page__road-map mb-5 px-0">
+      <div className="container-fluid d-flex categories-page__road-map px-0">
         <div
           className="col-7 h-100"
           style={{
-            background:
-              'url(https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=60)',
+            background: 'url(/images/map.jpg)',
           }}
         />
         <div className="categories-page__road-map-content col-5 d-flex justify-content-center d-flex flex-column">

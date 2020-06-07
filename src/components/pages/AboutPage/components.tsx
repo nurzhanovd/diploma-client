@@ -69,7 +69,7 @@ export const AboutPage: FC<Props> = (props: Props) => {
             <Link to="/main/categories">Check out available categories</Link>
           </p>
           <p className="main-page__description main-page__btn">
-            <Link to="/main/categories">Register to keep track of your progress</Link>
+            <Link to="/auth/sign-up">Register to keep track of your progress</Link>
           </p>
         </section>
       </div>

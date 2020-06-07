@@ -1,9 +1,9 @@
-import { useLazyQuery, useQuery } from '@apollo/react-hooks';
+import { useLazyQuery } from '@apollo/react-hooks';
 import debounce from 'debounce';
 import React, { ChangeEventHandler, FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { TopicTag } from 'components/molecules/TopicTag';
 import { InfoBlock } from 'components/molecules/InfoBlock';
-import { FormGroup, InputGroup, Label, Button } from '@blueprintjs/core';
+import { FormGroup, InputGroup, Button } from '@blueprintjs/core';
 import classNames from 'classnames';
 import {
   roadMapNodesAtom,
@@ -15,13 +15,11 @@ import {
   Node,
   changeRoadMapTitleAction,
 } from 'store/nodes';
-import * as qs from 'querystring';
 import { v4 as uuid } from 'uuid';
 
 import { useAction, useAtom } from '@reatom/react';
-import { query, queryCategories } from './index.gql';
+import { query } from './index.gql';
 import { Search, SearchVariables } from './__generated__/Search';
-import { Categories } from './__generated__/Categories';
 
 import { Props } from './props';
 import './styles.scss';
@@ -32,14 +30,6 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
     query,
   );
 
-  const { data } = useQuery<Categories>(queryCategories);
-
-  const [searchCategory, setSearchCategory] = useState(
-    qs.parse(window.location.search).category || '',
-  );
-  const onCategoryChange: ChangeEventHandler<HTMLSelectElement> = useCallback((e) => {
-    console.log(e.target.value);
-  }, []);
   const nodes = useAtom(roadMapNodesAtom);
   const addNodes = useAction(addNodesToRoadMapAction);
   const changeRoadMapTitle = useAction(changeRoadMapTitleAction);
@@ -107,21 +97,11 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
   const fetchNodes = useCallback(
     debounce((str: string) => {
       searchNodes({
-        variables: { searchString: str, rootId: 'cc7caae6-1a6d-4330-8ba2-e7bb76ca51d4' },
+        variables: { searchString: str },
       });
     }, 250),
     [],
   );
-
-  const categories = useMemo(() => {
-    if (data?.Node) {
-      return data.Node.map((n) => ({
-        id: n?.uuid,
-        title: n?.title,
-      })).filter((n) => n.id && n.title);
-    }
-    return [];
-  }, [data]);
 
   useEffect(() => {
     if (searchString) {
@@ -132,11 +112,12 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
   const foundNodes = useMemo(() => {
     if (rawSearchNodes) {
       return (
-        rawSearchNodes.RoadMapSearch?.map((n) => ({
+        rawSearchNodes.Leaf?.map((n) => ({
           id: n?.uuid || '',
           title: n?.title || '',
           tableOfContents: [],
           type: 'Node',
+          completed: n?.isComplete,
         })) || []
       );
     }
@@ -235,8 +216,14 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
                 );
               }
               return (
-                <TopicTag className="road-map__foundNodes mb-3 mr-3" key={id} text={title}>
+                <TopicTag
+                  isComplete={(nodes[id] as Node).completed}
+                  className="road-map__foundNodes mb-3 mr-3"
+                  key={id}
+                  text={title}
+                >
                   <InfoBlock
+                    isComplete={(nodes[id] as Node).completed}
                     nodeId={id}
                     text={title}
                     tableOfContents={[]}
@@ -249,18 +236,6 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
         </div>
         <div className="col-5">
           <div className="d-flex flex-column road-map__form">
-            <Label>
-              Category (required)
-              <div className="bp3-select bp3-large">
-                <select onChange={onCategoryChange} defaultValue={searchCategory}>
-                  {categories.map((n) => (
-                    <option key={n.title} value={n.id}>
-                      {n.title}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </Label>
             <FormGroup
               helperText="Find what you want to learn by keywords"
               label="Search"
@@ -272,8 +247,14 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
 
             <div className="d-flex flex-wrap mt-5">
               {foundNodes.map((n) => (
-                <TopicTag className="road-map__foundNodes mb-3 mr-3" key={n.id} text={n.title}>
+                <TopicTag
+                  isComplete={Boolean(n.completed)}
+                  className="road-map__foundNodes mb-3 mr-3"
+                  key={n.id}
+                  text={n.title}
+                >
                   <InfoBlock
+                    isComplete={Boolean(n.completed)}
                     nodeId={n.id}
                     text={n.title}
                     actions={[
