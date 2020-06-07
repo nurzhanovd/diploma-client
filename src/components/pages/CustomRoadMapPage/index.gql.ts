@@ -8,3 +8,12 @@ export const query = gql`
     }
   }
 `;
+
+export const queryCategories = gql`
+  query Categories {
+    Node(root: true) {
+      uuid
+      title
+    }
+  }
+`;

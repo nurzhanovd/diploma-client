@@ -26,9 +26,9 @@ export const TreeNode: FC<Props> = (props) => {
     return rowChildes.length ? `${doneLength}/${rowChildes.length}` : '';
   }, [id, nodes]);
   return (
-    <TopicTag className={className} text={`${title} ${status}`}>
+    <TopicTag className={classNamesad} text={`${title} ${status}`}>
       <InfoBlock
-        nodeId={id}
+        nodeId={id}ass
         text={title}
         breadcrumb={breadCrumb}
         tableOfContents={tableOfContents}

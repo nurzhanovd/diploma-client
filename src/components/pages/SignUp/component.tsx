@@ -15,8 +15,8 @@ import './styles.scss';
 import { RegisterPayload } from './types';
 
 const defaultValue = {
-  email: 'nurzhanovdev@gmail.com',
-  username: 'daulet',
+  email: 'nurzhanovdev@gmail.comq',
+  username: 'dauletq',
   password: 'qwerty123',
   confirmPassword: 'qwerty123',
 };
@@ -40,7 +40,7 @@ export const SignUp: FC<Props> = (props: Props) => {
     {},
   );
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [register, { loading, data }] = useMutation<Register, SignUpVariables>(query);
+  const [register, { loading, data, called }] = useMutation<Register, SignUpVariables>(query);
 
   const onValidate = (errorsField: Record<keyof RegisterPayload, string>) => {
     const errorList = validateFormData(errorsField);
@@ -48,14 +48,17 @@ export const SignUp: FC<Props> = (props: Props) => {
     return errorList;
   };
 
-  const onSubmit = (values: SignUpVariables) => {
+  const onSubmit = async (values: SignUpVariables) => {
     setErrors({});
     register({ variables: values });
   };
 
   useEffect(() => {
-    if (data?.SignUp?.errors) {
+    if (data?.SignUp?.errors?.length) {
       setErrors(Object.fromEntries(data.SignUp.errors.map((n: any) => [n?.key, n?.value])));
+    } else if (data?.SignUp?.token) {
+      localStorage.setItem('token', data.SignUp.token);
+      setStep(2);
     }
   }, [data]);
   return (

@@ -649,8 +649,8 @@ type Mutation {
   UploadFile(file: Upload!): File!
   SignUp(username: String!, email: String!, password: String!, confirmPassword: String!): AuthPayload
   SignIn(login: String!, password: String!): AuthPayload
-  CreateRoadMap(roadMapRelation: [String], nodeRoadMapRelation: [String]): String
   FulfillNode(uuid: ID!): Boolean
+  CreateRoadMap: [Node]
   CreateFile(filename: ID, mimetype: String!, encoding: String!): File
   UpdateFile(filename: ID!, mimetype: String, encoding: String): File
   DeleteFile(filename: ID!): File

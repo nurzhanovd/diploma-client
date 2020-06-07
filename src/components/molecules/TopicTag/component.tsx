@@ -1,11 +1,4 @@
-import React, {
-  FC,
-  createRef,
-  useState,
-  useCallback,
-  useEffect,
-  MouseEventHandler,
-} from 'react';
+import React, { FC, createRef, useState, useCallback, useEffect, MouseEventHandler } from 'react';
 import classNames from 'classnames';
 import { Props } from './props';
 import './styles.scss';
@@ -14,7 +7,6 @@ export const TopicTag: FC<Props> = (props) => {
   const { text, isComplete, className, children, ...rest } = props;
   const [openInfoBlock, setInfoBlockOpen] = useState(false);
   const toggleInfoBlock: MouseEventHandler<HTMLSpanElement> = (e) => {
-    console.log('here');
     e.preventDefault();
     e.stopPropagation();
     setInfoBlockOpen(!openInfoBlock);

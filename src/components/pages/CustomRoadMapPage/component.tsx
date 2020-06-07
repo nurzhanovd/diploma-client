@@ -1,4 +1,4 @@
-import { useLazyQuery } from '@apollo/react-hooks';
+import { useLazyQuery, useQuery } from '@apollo/react-hooks';
 import debounce from 'debounce';
 import React, { ChangeEventHandler, FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { TopicTag } from 'components/molecules/TopicTag';
@@ -10,34 +10,53 @@ import {
   addNodesToRoadMapAction,
   addNodeToRoadmapNodeAction,
   addNewRoadMapNodeAction,
+  deleteNodeFromRoadMapAction,
   ID,
+  Node,
   changeRoadMapTitleAction,
 } from 'store/nodes';
+import * as qs from 'querystring';
+import { v4 as uuid } from 'uuid';
 
 import { useAction, useAtom } from '@reatom/react';
-import { query } from './index.gql';
+import { query, queryCategories } from './index.gql';
 import { Search, SearchVariables } from './__generated__/Search';
+import { Categories } from './__generated__/Categories';
 
 import { Props } from './props';
 import './styles.scss';
 import { Row } from '../../molecules/Row';
 
 export const CustomRoadMapPage: FC<Props> = (props) => {
+  const [searchNodes, { data: rawSearchNodes, loading }] = useLazyQuery<Search, SearchVariables>(
+    query,
+  );
+
+  const { data } = useQuery<Categories>(queryCategories);
+
+  const [searchCategory, setSearchCategory] = useState(
+    qs.parse(window.location.search).category || '',
+  );
+  const onCategoryChange: ChangeEventHandler<HTMLSelectElement> = useCallback((e) => {
+    console.log(e.target.value);
+  }, []);
   const nodes = useAtom(roadMapNodesAtom);
   const addNodes = useAction(addNodesToRoadMapAction);
   const changeRoadMapTitle = useAction(changeRoadMapTitleAction);
   const addNodeToRoadmap = useAction(addNodeToRoadmapNodeAction);
   const addNewRoadMapNode = useAction(addNewRoadMapNodeAction);
+  const deleteNodeFromRoadMap = useAction(deleteNodeFromRoadMapAction);
   const { className, ...rest } = props;
   const [open, setOpen] = useState<Set<ID>>(new Set());
-  const [searchString, setSearchString] = useState('');
+  const [searchString, setSearchString] = useState('s');
 
   const [roadmapTitle, setRoadmapTitle] = useState<string>('New Roadmap');
   const [selectedRoadMapNode, setSelectedRoadMapNode] = useState<ID>(1);
   const [editableRoadMapNode, setEditableRoadMapNode] = useState<ID>(1);
-  const [searchNodes, { data: rawSearchNodes, loading }] = useLazyQuery<Search, SearchVariables>(
-    query,
-  );
+
+  useEffect(() => {
+    console.log(nodes);
+  }, [nodes]);
 
   const selectRoadMapNode = useCallback(
     (id: ID): any => (e: any) => {
@@ -94,6 +113,16 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
     [],
   );
 
+  const categories = useMemo(() => {
+    if (data?.Node) {
+      return data.Node.map((n) => ({
+        id: n?.uuid,
+        title: n?.title,
+      })).filter((n) => n.id && n.title);
+    }
+    return [];
+  }, [data]);
+
   useEffect(() => {
     if (searchString) {
       fetchNodes(searchString);
@@ -107,7 +136,6 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
           id: n?.uuid || '',
           title: n?.title || '',
           tableOfContents: [],
-          childes: [],
           type: 'Node',
         })) || []
       );
@@ -115,16 +143,8 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
     return [];
   }, [rawSearchNodes]);
 
-  useEffect(() => {
-    if (foundNodes && foundNodes.length) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-      // @ts-ignore
-      addNodes(Object.fromEntries(foundNodes.map((n) => [n.id, n])));
-    }
-  }, [foundNodes]);
-
   const isOpen = (id: ID) => open.has(id);
-  const isLeaf = (id: ID) => !nodes[id]?.childes;
+  const isLeaf = (id: ID) => !nodes[id]?.childes?.length;
   const getChildes = (id: ID) => nodes[id]?.childes;
   const onClick = useCallback(
     (id: ID) => {
@@ -140,7 +160,18 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
   );
 
   const onAddRoadMapClick = (id: ID) => {
-    addNodeToRoadmap({ nodeId: id, roadmapId: selectedRoadMapNode });
+    const node = nodes[id];
+    const l = foundNodes.find(({ id: foundId }) => foundId === id)!;
+    if (node && node.type === 'Node' && node.parentId) {
+      const { childes } = nodes[node.parentId];
+      if (childes.includes(id)) return;
+    }
+    addNodeToRoadmap({ node: (l as unknown) as Node, roadmapId: selectedRoadMapNode });
+  };
+
+  const onDeleteFromRoadMapNode = (id: ID) => () => {
+    deleteNodeFromRoadMap(id);
+    const { parentId } = nodes[id];
   };
 
   return (
@@ -172,7 +203,7 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
             getChildes={getChildes}
           >
             {(id) => {
-              const { title, type } = nodes[id];
+              const { title, type, parentId } = nodes[id];
               const isEdit = id === editableRoadMapNode;
               if (type === 'Roadmap') {
                 return (
@@ -199,12 +230,18 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
                     <Button onClick={addNewRoadmapNode(id)} className="mr-3" icon="git-new-branch">
                       Add branch
                     </Button>
+                    {parentId && <Button onClick={onDeleteFromRoadMapNode(id)}>Delete</Button>}
                   </div>
                 );
               }
               return (
                 <TopicTag className="road-map__foundNodes mb-3 mr-3" key={id} text={title}>
-                  <InfoBlock nodeId={id} text={title} actions={[]} tableOfContents={[]} />
+                  <InfoBlock
+                    nodeId={id}
+                    text={title}
+                    tableOfContents={[]}
+                    actions={[{ text: 'Delete Node', onClick: deleteNodeFromRoadMap }]}
+                  />
                 </TopicTag>
               );
             }}
@@ -215,11 +252,12 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
             <Label>
               Category (required)
               <div className="bp3-select bp3-large">
-                <select defaultValue="1">
-                  <option value="1">All</option>
-                  <option value="2">Computer Science</option>
-                  <option value="3">Management</option>
-                  <option value="4">Data Science</option>
+                <select onChange={onCategoryChange} defaultValue={searchCategory}>
+                  {categories.map((n) => (
+                    <option key={n.title} value={n.id}>
+                      {n.title}
+                    </option>
+                  ))}
                 </select>
               </div>
             </Label>

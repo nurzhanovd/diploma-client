@@ -4,7 +4,7 @@ module.exports = {
     excludes: 'schema.graphql',
     includes: '**/*.gql.ts',
     service: {
-      url: 'api.knowledge-forest.space',
+      url: 'http://localhost:4001/graphql',
       headers: {
         authorization: 'Bearer ZOWI',
       },
