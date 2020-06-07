@@ -42,44 +42,119 @@ directive @connection(
   filter: [String!]
 ) on FIELD
 
-type _AddFOGContentsPayload {
-  from: FOG
-  to: KeyValueContent
+type _AddNodeChildesPayload {
+  from: Node
+  to: Node
 }
 
-type _AddFOGPartOfSogPayload {
-  from: SOG
-  to: FOG
+type _AddNodeParentPayload {
+  from: Node
+  to: Node
 }
 
-type _AddFOGPostrequisitesPayload {
-  from: FOG
-  to: FOG
+type _AddTagForPayload {
+  from: Tag
+  to: Node
 }
 
-type _AddFOGPrerequisitesPayload {
-  from: FOG
-  to: FOG
+input _AuthErrorFilter {
+  AND: [_AuthErrorFilter!]
+  OR: [_AuthErrorFilter!]
+  key: String
+  key_not: String
+  key_in: [String!]
+  key_not_in: [String!]
+  key_contains: String
+  key_not_contains: String
+  key_starts_with: String
+  key_not_starts_with: String
+  key_ends_with: String
+  key_not_ends_with: String
+  value: String
+  value_not: String
+  value_in: [String!]
+  value_not_in: [String!]
+  value_contains: String
+  value_not_contains: String
+  value_starts_with: String
+  value_not_starts_with: String
+  value_ends_with: String
+  value_not_ends_with: String
 }
 
-type _AddSOGChildrenPayload {
-  from: SOG
-  to: SOG
+input _AuthErrorInput {
+  key: String!
 }
 
-type _AddSOGContentsPayload {
-  from: SOG
-  to: KeyValueContent
+enum _AuthErrorOrdering {
+  key_asc
+  key_desc
+  value_asc
+  value_desc
+  _id_asc
+  _id_desc
 }
 
-type _AddSOGFogsPayload {
-  from: SOG
-  to: FOG
+input _AuthPayloadFilter {
+  AND: [_AuthPayloadFilter!]
+  OR: [_AuthPayloadFilter!]
+  token: String
+  token_not: String
+  token_in: [String!]
+  token_not_in: [String!]
+  token_contains: String
+  token_not_contains: String
+  token_starts_with: String
+  token_not_starts_with: String
+  token_ends_with: String
+  token_not_ends_with: String
+  uuid: String
+  uuid_not: String
+  uuid_in: [String!]
+  uuid_not_in: [String!]
+  uuid_contains: String
+  uuid_not_contains: String
+  uuid_starts_with: String
+  uuid_not_starts_with: String
+  uuid_ends_with: String
+  uuid_not_ends_with: String
+  email: String
+  email_not: String
+  email_in: [String!]
+  email_not_in: [String!]
+  email_contains: String
+  email_not_contains: String
+  email_starts_with: String
+  email_not_starts_with: String
+  email_ends_with: String
+  email_not_ends_with: String
+  username: String
+  username_not: String
+  username_in: [String!]
+  username_not_in: [String!]
+  username_contains: String
+  username_not_contains: String
+  username_starts_with: String
+  username_not_starts_with: String
+  username_ends_with: String
+  username_not_ends_with: String
 }
 
-type _AddSOGParentsPayload {
-  from: SOG
-  to: SOG
+input _AuthPayloadInput {
+  token: String!
+}
+
+enum _AuthPayloadOrdering {
+  token_asc
+  token_desc
+  uuid_asc
+  uuid_desc
+  email_asc
+  email_desc
+  username_asc
+  username_desc
+  _id_asc
+  _id_desc
 }
 
 input _FileFilter {
@@ -132,9 +207,9 @@ enum _FileOrdering {
   _id_desc
 }
 
-input _FOGFilter {
-  AND: [_FOGFilter!]
-  OR: [_FOGFilter!]
+input _GenericSearchResultFilter {
+  AND: [_GenericSearchResultFilter!]
+  OR: [_GenericSearchResultFilter!]
   uuid: ID
   uuid_not: ID
   uuid_in: [ID!]
@@ -145,74 +220,34 @@ input _FOGFilter {
   uuid_not_starts_with: ID
   uuid_ends_with: ID
   uuid_not_ends_with: ID
-  contents: _KeyValueContentFilter
-  contents_not: _KeyValueContentFilter
-  contents_in: [_KeyValueContentFilter!]
-  contents_not_in: [_KeyValueContentFilter!]
-  contents_some: _KeyValueContentFilter
-  contents_none: _KeyValueContentFilter
-  contents_single: _KeyValueContentFilter
-  contents_every: _KeyValueContentFilter
-  prerequisites: _FOGFilter
-  prerequisites_not: _FOGFilter
-  prerequisites_in: [_FOGFilter!]
-  prerequisites_not_in: [_FOGFilter!]
-  prerequisites_some: _FOGFilter
-  prerequisites_none: _FOGFilter
-  prerequisites_single: _FOGFilter
-  prerequisites_every: _FOGFilter
-  postrequisites: _FOGFilter
-  postrequisites_not: _FOGFilter
-  postrequisites_in: [_FOGFilter!]
-  postrequisites_not_in: [_FOGFilter!]
-  postrequisites_some: _FOGFilter
-  postrequisites_none: _FOGFilter
-  postrequisites_single: _FOGFilter
-  postrequisites_every: _FOGFilter
-  partOfSog: _SOGFilter
-  partOfSog_not: _SOGFilter
-  partOfSog_in: [_SOGFilter!]
-  partOfSog_not_in: [_SOGFilter!]
-  partOfSog_some: _SOGFilter
-  partOfSog_none: _SOGFilter
-  partOfSog_single: _SOGFilter
-  partOfSog_every: _SOGFilter
-}
-
-input _FOGInput {
-  uuid: ID!
-}
-
-enum _FOGOrdering {
-  uuid_asc
-  uuid_desc
-  _id_asc
-  _id_desc
-}
-
-input _KeyValueContentFilter {
-  AND: [_KeyValueContentFilter!]
-  OR: [_KeyValueContentFilter!]
-  uuid: ID
-  uuid_not: ID
-  uuid_in: [ID!]
-  uuid_not_in: [ID!]
-  uuid_contains: ID
-  uuid_not_contains: ID
-  uuid_starts_with: ID
-  uuid_not_starts_with: ID
-  uuid_ends_with: ID
-  uuid_not_ends_with: ID
-  key: String
-  key_not: String
-  key_in: [String!]
-  key_not_in: [String!]
-  key_contains: String
-  key_not_contains: String
-  key_starts_with: String
-  key_not_starts_with: String
-  key_ends_with: String
-  key_not_ends_with: String
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  score: Int
+  score_not: Int
+  score_in: [Int!]
+  score_not_in: [Int!]
+  score_lt: Int
+  score_lte: Int
+  score_gt: Int
+  score_gte: Int
   type: String
   type_not: String
   type_in: [String!]
@@ -223,95 +258,40 @@ input _KeyValueContentFilter {
   type_not_starts_with: String
   type_ends_with: String
   type_not_ends_with: String
-  value: String
-  value_not: String
-  value_in: [String!]
-  value_not_in: [String!]
-  value_contains: String
-  value_not_contains: String
-  value_starts_with: String
-  value_not_starts_with: String
-  value_ends_with: String
-  value_not_ends_with: String
-  order: Int
-  order_not: Int
-  order_in: [Int!]
-  order_not_in: [Int!]
-  order_lt: Int
-  order_lte: Int
-  order_gt: Int
-  order_gte: Int
-  orderForField: String
-  orderForField_not: String
-  orderForField_in: [String!]
-  orderForField_not_in: [String!]
-  orderForField_contains: String
-  orderForField_not_contains: String
-  orderForField_starts_with: String
-  orderForField_not_starts_with: String
-  orderForField_ends_with: String
-  orderForField_not_ends_with: String
 }
 
-input _KeyValueContentInput {
+input _GenericSearchResultInput {
   uuid: ID!
 }
 
-enum _KeyValueContentOrdering {
+enum _GenericSearchResultOrdering {
   uuid_asc
   uuid_desc
-  key_asc
-  key_desc
+  title_asc
+  title_desc
+  description_asc
+  description_desc
+  score_asc
+  score_desc
   type_asc
   type_desc
-  value_asc
-  value_desc
-  order_asc
-  order_desc
-  orderForField_asc
-  orderForField_desc
   _id_asc
   _id_desc
 }
 
-type _MergeFOGContentsPayload {
-  from: FOG
-  to: KeyValueContent
+type _MergeNodeChildesPayload {
+  from: Node
+  to: Node
 }
 
-type _MergeFOGPartOfSogPayload {
-  from: SOG
-  to: FOG
+type _MergeNodeParentPayload {
+  from: Node
+  to: Node
 }
 
-type _MergeFOGPostrequisitesPayload {
-  from: FOG
-  to: FOG
-}
-
-type _MergeFOGPrerequisitesPayload {
-  from: FOG
-  to: FOG
-}
-
-type _MergeSOGChildrenPayload {
-  from: SOG
-  to: SOG
-}
-
-type _MergeSOGContentsPayload {
-  from: SOG
-  to: KeyValueContent
-}
-
-type _MergeSOGFogsPayload {
-  from: SOG
-  to: FOG
-}
-
-type _MergeSOGParentsPayload {
-  from: SOG
-  to: SOG
+type _MergeTagForPayload {
+  from: Tag
+  to: Node
 }
 
 type _Neo4jDate {
@@ -464,16 +444,40 @@ input _NodeFilter {
   uuid_not_starts_with: ID
   uuid_ends_with: ID
   uuid_not_ends_with: ID
-  type: String
-  type_not: String
-  type_in: [String!]
-  type_not_in: [String!]
-  type_contains: String
-  type_not_contains: String
-  type_starts_with: String
-  type_not_starts_with: String
-  type_ends_with: String
-  type_not_ends_with: String
+  root: Boolean
+  root_not: Boolean
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  childes: _NodeFilter
+  childes_not: _NodeFilter
+  childes_in: [_NodeFilter!]
+  childes_not_in: [_NodeFilter!]
+  childes_some: _NodeFilter
+  childes_none: _NodeFilter
+  childes_single: _NodeFilter
+  childes_every: _NodeFilter
+  parent: _NodeFilter
+  parent_not: _NodeFilter
+  parent_in: [_NodeFilter!]
+  parent_not_in: [_NodeFilter!]
 }
 
 input _NodeInput {
@@ -483,8 +487,14 @@ input _NodeInput {
 enum _NodeOrdering {
   uuid_asc
   uuid_desc
-  type_asc
-  type_desc
+  root_asc
+  root_desc
+  title_asc
+  title_desc
+  description_asc
+  description_desc
+  isComplete_asc
+  isComplete_desc
   _id_asc
   _id_desc
 }
@@ -494,36 +504,36 @@ enum _RelationDirections {
   OUT
 }
 
-input _RelFilter {
-  AND: [_RelFilter!]
-  OR: [_RelFilter!]
-  from: String
-  from_not: String
-  from_in: [String!]
-  from_not_in: [String!]
-  from_contains: String
-  from_not_contains: String
-  from_starts_with: String
-  from_not_starts_with: String
-  from_ends_with: String
-  from_not_ends_with: String
-  to: String
-  to_not: String
-  to_in: [String!]
-  to_not_in: [String!]
-  to_contains: String
-  to_not_contains: String
-  to_starts_with: String
-  to_not_starts_with: String
-  to_ends_with: String
-  to_not_ends_with: String
+input _RelationFilter {
+  AND: [_RelationFilter!]
+  OR: [_RelationFilter!]
+  from: ID
+  from_not: ID
+  from_in: [ID!]
+  from_not_in: [ID!]
+  from_contains: ID
+  from_not_contains: ID
+  from_starts_with: ID
+  from_not_starts_with: ID
+  from_ends_with: ID
+  from_not_ends_with: ID
+  to: ID
+  to_not: ID
+  to_in: [ID!]
+  to_not_in: [ID!]
+  to_contains: ID
+  to_not_contains: ID
+  to_starts_with: ID
+  to_not_starts_with: ID
+  to_ends_with: ID
+  to_not_ends_with: ID
 }
 
-input _RelInput {
-  from: String!
+input _RelationInput {
+  from: ID!
 }
 
-enum _RelOrdering {
+enum _RelationOrdering {
   from_asc
   from_desc
   to_asc
@@ -532,59 +542,24 @@ enum _RelOrdering {
   _id_desc
 }
 
-type _RemoveFOGContentsPayload {
-  from: FOG
-  to: KeyValueContent
+type _RemoveNodeChildesPayload {
+  from: Node
+  to: Node
 }
 
-type _RemoveFOGPartOfSogPayload {
-  from: SOG
-  to: FOG
+type _RemoveNodeParentPayload {
+  from: Node
+  to: Node
 }
 
-type _RemoveFOGPostrequisitesPayload {
-  from: FOG
-  to: FOG
+type _RemoveTagForPayload {
+  from: Tag
+  to: Node
 }
 
-type _RemoveFOGPrerequisitesPayload {
-  from: FOG
-  to: FOG
-}
-
-type _RemoveSOGChildrenPayload {
-  from: SOG
-  to: SOG
-}
-
-type _RemoveSOGContentsPayload {
-  from: SOG
-  to: KeyValueContent
-}
-
-type _RemoveSOGFogsPayload {
-  from: SOG
-  to: FOG
-}
-
-type _RemoveSOGParentsPayload {
-  from: SOG
-  to: SOG
-}
-
-input _RSTFilter {
-  AND: [_RSTFilter!]
-  OR: [_RSTFilter!]
-}
-
-enum _RSTOrdering {
-  _id_asc
-  _id_desc
-}
-
-input _SOGFilter {
-  AND: [_SOGFilter!]
-  OR: [_SOGFilter!]
+input _TagFilter {
+  AND: [_TagFilter!]
+  OR: [_TagFilter!]
   uuid: ID
   uuid_not: ID
   uuid_in: [ID!]
@@ -595,49 +570,62 @@ input _SOGFilter {
   uuid_not_starts_with: ID
   uuid_ends_with: ID
   uuid_not_ends_with: ID
-  contents: _KeyValueContentFilter
-  contents_not: _KeyValueContentFilter
-  contents_in: [_KeyValueContentFilter!]
-  contents_not_in: [_KeyValueContentFilter!]
-  contents_some: _KeyValueContentFilter
-  contents_none: _KeyValueContentFilter
-  contents_single: _KeyValueContentFilter
-  contents_every: _KeyValueContentFilter
-  children: _SOGFilter
-  children_not: _SOGFilter
-  children_in: [_SOGFilter!]
-  children_not_in: [_SOGFilter!]
-  children_some: _SOGFilter
-  children_none: _SOGFilter
-  children_single: _SOGFilter
-  children_every: _SOGFilter
-  parents: _SOGFilter
-  parents_not: _SOGFilter
-  parents_in: [_SOGFilter!]
-  parents_not_in: [_SOGFilter!]
-  parents_some: _SOGFilter
-  parents_none: _SOGFilter
-  parents_single: _SOGFilter
-  parents_every: _SOGFilter
-  fogs: _FOGFilter
-  fogs_not: _FOGFilter
-  fogs_in: [_FOGFilter!]
-  fogs_not_in: [_FOGFilter!]
-  fogs_some: _FOGFilter
-  fogs_none: _FOGFilter
-  fogs_single: _FOGFilter
-  fogs_every: _FOGFilter
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  for: _NodeFilter
+  for_not: _NodeFilter
+  for_in: [_NodeFilter!]
+  for_not_in: [_NodeFilter!]
+  for_some: _NodeFilter
+  for_none: _NodeFilter
+  for_single: _NodeFilter
+  for_every: _NodeFilter
 }
 
-input _SOGInput {
+input _TagInput {
   uuid: ID!
 }
 
-enum _SOGOrdering {
+enum _TagOrdering {
   uuid_asc
   uuid_desc
+  title_asc
+  title_desc
   _id_asc
   _id_desc
+}
+
+input _TreeNodePayloadFilter {
+  AND: [_TreeNodePayloadFilter!]
+  OR: [_TreeNodePayloadFilter!]
+}
+
+enum _TreeNodePayloadOrdering {
+  _id_asc
+  _id_desc
+}
+
+type AuthError {
+  key: String!
+  value: String!
+  _id: String
+}
+
+type AuthPayload {
+  token: String
+  uuid: String
+  email: String
+  username: String
+  errors(first: Int, offset: Int, orderBy: [_AuthErrorOrdering], filter: _AuthErrorFilter): [AuthError]
+  _id: String
 }
 
 type File {
@@ -647,113 +635,111 @@ type File {
   _id: String
 }
 
-type FOG {
+type GenericSearchResult {
   uuid: ID!
-  contents(first: Int, offset: Int, orderBy: [_KeyValueContentOrdering], filter: _KeyValueContentFilter): [KeyValueContent]
-  prerequisites(first: Int, offset: Int, orderBy: [_FOGOrdering], filter: _FOGFilter): [FOG]
-  postrequisites(first: Int, offset: Int, orderBy: [_FOGOrdering], filter: _FOGFilter): [FOG]
-  partOfSog(first: Int, offset: Int, orderBy: [_SOGOrdering], filter: _SOGFilter): [SOG]
-  _id: String
-}
-
-type KeyValueContent {
-  uuid: ID!
-  key: String
+  title: String
+  description: String
+  score: Int!
   type: String
-  value: String
-  order: Int
-  orderForField: String
   _id: String
 }
 
 type Mutation {
   DeleteFileAndRemoveFromDb(filename: ID!): File
   UploadFile(file: Upload!): File!
-  CreateKeyValueContent(uuid: ID, key: String, type: String, value: String, order: Int, orderForField: String): KeyValueContent
-  UpdateKeyValueContent(uuid: ID!, key: String, type: String, value: String, order: Int, orderForField: String): KeyValueContent
-  DeleteKeyValueContent(uuid: ID!): KeyValueContent
-  MergeKeyValueContent(uuid: ID!, key: String, type: String, value: String, order: Int, orderForField: String): KeyValueContent
-  AddFOGContents(from: _FOGInput!, to: _KeyValueContentInput!): _AddFOGContentsPayload
-  RemoveFOGContents(from: _FOGInput!, to: _KeyValueContentInput!): _RemoveFOGContentsPayload
-  MergeFOGContents(from: _FOGInput!, to: _KeyValueContentInput!): _MergeFOGContentsPayload
-  AddFOGPrerequisites(from: _FOGInput!, to: _FOGInput!): _AddFOGPrerequisitesPayload
-  RemoveFOGPrerequisites(from: _FOGInput!, to: _FOGInput!): _RemoveFOGPrerequisitesPayload
-  MergeFOGPrerequisites(from: _FOGInput!, to: _FOGInput!): _MergeFOGPrerequisitesPayload
-  AddFOGPostrequisites(from: _FOGInput!, to: _FOGInput!): _AddFOGPostrequisitesPayload
-  RemoveFOGPostrequisites(from: _FOGInput!, to: _FOGInput!): _RemoveFOGPostrequisitesPayload
-  MergeFOGPostrequisites(from: _FOGInput!, to: _FOGInput!): _MergeFOGPostrequisitesPayload
-  AddFOGPartOfSog(from: _SOGInput!, to: _FOGInput!): _AddFOGPartOfSogPayload
-  RemoveFOGPartOfSog(from: _SOGInput!, to: _FOGInput!): _RemoveFOGPartOfSogPayload
-  MergeFOGPartOfSog(from: _SOGInput!, to: _FOGInput!): _MergeFOGPartOfSogPayload
-  CreateFOG(uuid: ID): FOG
-  DeleteFOG(uuid: ID!): FOG
-  AddSOGContents(from: _SOGInput!, to: _KeyValueContentInput!): _AddSOGContentsPayload
-  RemoveSOGContents(from: _SOGInput!, to: _KeyValueContentInput!): _RemoveSOGContentsPayload
-  MergeSOGContents(from: _SOGInput!, to: _KeyValueContentInput!): _MergeSOGContentsPayload
-  AddSOGChildren(from: _SOGInput!, to: _SOGInput!): _AddSOGChildrenPayload
-  RemoveSOGChildren(from: _SOGInput!, to: _SOGInput!): _RemoveSOGChildrenPayload
-  MergeSOGChildren(from: _SOGInput!, to: _SOGInput!): _MergeSOGChildrenPayload
-  AddSOGParents(from: _SOGInput!, to: _SOGInput!): _AddSOGParentsPayload
-  RemoveSOGParents(from: _SOGInput!, to: _SOGInput!): _RemoveSOGParentsPayload
-  MergeSOGParents(from: _SOGInput!, to: _SOGInput!): _MergeSOGParentsPayload
-  AddSOGFogs(from: _SOGInput!, to: _FOGInput!): _AddSOGFogsPayload
-  RemoveSOGFogs(from: _SOGInput!, to: _FOGInput!): _RemoveSOGFogsPayload
-  MergeSOGFogs(from: _SOGInput!, to: _FOGInput!): _MergeSOGFogsPayload
-  CreateSOG(uuid: ID): SOG
-  DeleteSOG(uuid: ID!): SOG
+  SignUp(username: String!, email: String!, password: String!, confirmPassword: String!): AuthPayload
+  SignIn(login: String!, password: String!): AuthPayload
+  CreateRoadMap(roadMapRelation: [String], nodeRoadMapRelation: [String]): String
+  FulfillNode(uuid: ID!): Boolean
   CreateFile(filename: ID, mimetype: String!, encoding: String!): File
   UpdateFile(filename: ID!, mimetype: String, encoding: String): File
   DeleteFile(filename: ID!): File
   MergeFile(filename: ID!, mimetype: String, encoding: String): File
-  CreateNode(uuid: ID, type: String): Node
-  UpdateNode(uuid: ID!, type: String): Node
+  AddNodeChildes(from: _NodeInput!, to: _NodeInput!): _AddNodeChildesPayload
+  RemoveNodeChildes(from: _NodeInput!, to: _NodeInput!): _RemoveNodeChildesPayload
+  MergeNodeChildes(from: _NodeInput!, to: _NodeInput!): _MergeNodeChildesPayload
+  AddNodeParent(from: _NodeInput!, to: _NodeInput!): _AddNodeParentPayload
+  RemoveNodeParent(from: _NodeInput!, to: _NodeInput!): _RemoveNodeParentPayload
+  MergeNodeParent(from: _NodeInput!, to: _NodeInput!): _MergeNodeParentPayload
+  CreateNode(uuid: ID, root: Boolean, title: String!, description: String, content: [String]): Node
+  UpdateNode(uuid: ID!, root: Boolean, title: String, description: String, content: [String]): Node
   DeleteNode(uuid: ID!): Node
-  MergeNode(uuid: ID!, type: String): Node
-  CreateRel(from: String, to: String): Rel
-  UpdateRel(from: String!, to: String): Rel
-  DeleteRel(from: String!): Rel
-  MergeRel(from: String!, to: String): Rel
-  CreateRST: RST
-  DeleteRST: RST
+  MergeNode(uuid: ID!, root: Boolean, title: String, description: String, content: [String]): Node
+  AddTagFor(from: _TagInput!, to: _NodeInput!): _AddTagForPayload
+  RemoveTagFor(from: _TagInput!, to: _NodeInput!): _RemoveTagForPayload
+  MergeTagFor(from: _TagInput!, to: _NodeInput!): _MergeTagForPayload
+  CreateTag(uuid: ID, title: String): Tag
+  UpdateTag(uuid: ID!, title: String): Tag
+  DeleteTag(uuid: ID!): Tag
+  MergeTag(uuid: ID!, title: String): Tag
+  CreateRelation(from: ID, to: ID!): Relation
+  UpdateRelation(from: ID!, to: ID): Relation
+  DeleteRelation(from: ID!): Relation
+  MergeRelation(from: ID!, to: ID): Relation
+  CreateTreeNodePayload: TreeNodePayload
+  DeleteTreeNodePayload: TreeNodePayload
+  CreateGenericSearchResult(uuid: ID, title: String, description: String, score: Int!, type: String): GenericSearchResult
+  UpdateGenericSearchResult(uuid: ID!, title: String, description: String, score: Int, type: String): GenericSearchResult
+  DeleteGenericSearchResult(uuid: ID!): GenericSearchResult
+  MergeGenericSearchResult(uuid: ID!, title: String, description: String, score: Int, type: String): GenericSearchResult
+  CreateAuthError(key: String!, value: String!): AuthError
+  UpdateAuthError(key: String!, value: String): AuthError
+  DeleteAuthError(key: String!): AuthError
+  MergeAuthError(key: String!, value: String): AuthError
+  CreateAuthPayload(token: String, uuid: String, email: String, username: String): AuthPayload
+  UpdateAuthPayload(token: String!, uuid: String, email: String, username: String): AuthPayload
+  DeleteAuthPayload(token: String!): AuthPayload
+  MergeAuthPayload(token: String!, uuid: String, email: String, username: String): AuthPayload
 }
 
 type Node {
   uuid: ID!
-  type: String
+  root: Boolean
+  title: String!
+  description: String
+  content: [String]
+  childes(first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
+  parent(filter: _NodeFilter): Node
+  isComplete: Boolean
+  neighbours(first: Int, offset: Int, orderBy: [_NodeOrdering]): [Node]
   _id: String
 }
 
 type Query {
-  RecursiveSOGTree(uuid: ID!, filter: _RSTFilter): RST
-  KeyValueContent(uuid: ID, key: String, type: String, value: String, order: Int, orderForField: String, _id: String, first: Int, offset: Int, orderBy: [_KeyValueContentOrdering], filter: _KeyValueContentFilter): [KeyValueContent]
-  FOG(uuid: ID, _id: String, first: Int, offset: Int, orderBy: [_FOGOrdering], filter: _FOGFilter): [FOG]
-  SOG(uuid: ID, _id: String, first: Int, offset: Int, orderBy: [_SOGOrdering], filter: _SOGFilter): [SOG]
+  TreeNode(uuid: ID!, filter: _TreeNodePayloadFilter): TreeNodePayload
+  IsNodeFulFilled(userId: ID!, nodeId: ID!): Boolean
+  NodeToRootPath(nodeId: ID!, first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
+  NodeNeighbours(nodeId: ID!, first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
+  SearchForNodesAndTags(searchString: String!, limit: Int, offset: Int, first: Int, orderBy: [_GenericSearchResultOrdering], filter: _GenericSearchResultFilter): [GenericSearchResult]
+  CurrentUser(filter: _AuthPayloadFilter): AuthPayload
+  GetCompletedNodes(nodeId: ID!, first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
+  RoadMapSearch(searchString: String!, rootId: ID!, first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
   File(filename: ID, mimetype: String, encoding: String, _id: String, first: Int, offset: Int, orderBy: [_FileOrdering], filter: _FileFilter): [File]
-  Node(uuid: ID, type: String, _id: String, first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
-  Rel(from: String, to: String, _id: String, first: Int, offset: Int, orderBy: [_RelOrdering], filter: _RelFilter): [Rel]
-  RST(_id: String, first: Int, offset: Int, orderBy: [_RSTOrdering], filter: _RSTFilter): [RST]
+  Node(uuid: ID, root: Boolean, title: String, description: String, content: String, isComplete: Boolean, _id: String, first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
+  Tag(uuid: ID, title: String, _id: String, first: Int, offset: Int, orderBy: [_TagOrdering], filter: _TagFilter): [Tag]
+  Relation(from: ID, to: ID, _id: String, first: Int, offset: Int, orderBy: [_RelationOrdering], filter: _RelationFilter): [Relation]
+  TreeNodePayload(_id: String, first: Int, offset: Int, orderBy: [_TreeNodePayloadOrdering], filter: _TreeNodePayloadFilter): [TreeNodePayload]
+  GenericSearchResult(uuid: ID, title: String, description: String, score: Int, type: String, _id: String, first: Int, offset: Int, orderBy: [_GenericSearchResultOrdering], filter: _GenericSearchResultFilter): [GenericSearchResult]
+  AuthError(key: String, value: String, _id: String, first: Int, offset: Int, orderBy: [_AuthErrorOrdering], filter: _AuthErrorFilter): [AuthError]
+  AuthPayload(token: String, uuid: String, email: String, username: String, _id: String, first: Int, offset: Int, orderBy: [_AuthPayloadOrdering], filter: _AuthPayloadFilter): [AuthPayload]
 }
 
-type Rel {
-  from: String
-  to: String
+type Relation {
+  from: ID!
+  to: ID!
   _id: String
 }
 
-type RST {
-  nodes(first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
-  nodeRels(first: Int, offset: Int, orderBy: [_RelOrdering], filter: _RelFilter): [Rel]
-  nodeContents(first: Int, offset: Int, orderBy: [_KeyValueContentOrdering], filter: _KeyValueContentFilter): [KeyValueContent]
-  nodeContentRels(first: Int, offset: Int, orderBy: [_RelOrdering], filter: _RelFilter): [Rel]
-  _id: String
-}
-
-type SOG {
+type Tag {
   uuid: ID!
-  contents(first: Int, offset: Int, orderBy: [_KeyValueContentOrdering], filter: _KeyValueContentFilter): [KeyValueContent]
-  children(first: Int, offset: Int, orderBy: [_SOGOrdering], filter: _SOGFilter): [SOG]
-  parents(first: Int, offset: Int, orderBy: [_SOGOrdering], filter: _SOGFilter): [SOG]
-  fogs(first: Int, offset: Int, orderBy: [_FOGOrdering], filter: _FOGFilter): [FOG]
+  title: String
+  for(first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
+  _id: String
+}
+
+type TreeNodePayload {
+  nodes(first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
+  rels(first: Int, offset: Int, orderBy: [_RelationOrdering], filter: _RelationFilter): [Relation]
   _id: String
 }
 

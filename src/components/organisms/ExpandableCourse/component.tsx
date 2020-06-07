@@ -1,30 +1,42 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { expandableCourse, nodeClick } from 'store/courses';
 import { useAction, useAtom } from '@reatom/react';
-import { Row } from 'components/molecules/Row';
-import { nodes as nodeAtom } from 'store/nodes';
-import { content, contentRelation } from 'store/content';
+import { Row, NodeId } from 'components/molecules/Row';
+import { nodesAtom } from 'store/nodes';
+import { TreeNode } from 'components/organisms/TreeNode';
 import { Props } from './props';
-import { ID } from './types/Payload';
 
 const Wrapper = styled.div``;
 
 export const ExpandableCourse: FC<Props> = (props) => {
-  const { data, className, rootId = '' } = props;
+  const { className, rootId = '' } = props;
   const courses = useAtom(expandableCourse);
-  const nodes = useAtom(nodeAtom);
+  const nodes = useAtom(nodesAtom);
+  const isOpen = useCallback((id: NodeId) => courses.has(id), [courses]);
+  const getChildes = useCallback((id: NodeId) => nodes[id].childes as any, [nodes]);
+  const isLeaf = useCallback((id: NodeId) => Boolean(!nodes[id].childes.length), [nodes]);
   const onClick = useAction((id) => nodeClick({ id }));
-  const isOpen = (id: ID): boolean => courses.has(id);
+
+  useEffect(() => {
+    if (!isOpen(rootId)) {
+      onClick(rootId);
+    }
+  }, [rootId, isOpen, onClick]);
   return (
     <Wrapper className={className}>
       <Row
         isRoot={true}
-        payload={data}
-        current={data.data[data.root]}
+        current={rootId}
         onClick={onClick}
         isOpen={isOpen}
-      />
+        isLeaf={isLeaf}
+        getChildes={getChildes}
+      >
+        {(id) => {
+          return <TreeNode id={id} />;
+        }}
+      </Row>
     </Wrapper>
   );
 };

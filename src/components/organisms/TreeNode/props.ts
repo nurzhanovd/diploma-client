@@ -1,4 +1,4 @@
 export type Props = {
-  rootId?: string;
+  id: string | number;
   className?: string;
 };

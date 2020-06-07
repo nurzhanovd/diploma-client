@@ -1,6 +1,5 @@
 import React, {
   FC,
-  useMemo,
   createRef,
   useState,
   useCallback,
@@ -8,32 +7,19 @@ import React, {
   MouseEventHandler,
 } from 'react';
 import classNames from 'classnames';
-import { InfoBlock } from 'components/molecules/InfoBlock';
-import { useHistory } from 'react-router';
-
 import { Props } from './props';
 import './styles.scss';
 
 export const TopicTag: FC<Props> = (props) => {
-  const { text, nodeId, breadCrumb, className, ...rest } = props;
+  const { text, isComplete, className, children, ...rest } = props;
   const [openInfoBlock, setInfoBlockOpen] = useState(false);
   const toggleInfoBlock: MouseEventHandler<HTMLSpanElement> = (e) => {
+    console.log('here');
     e.preventDefault();
     e.stopPropagation();
     setInfoBlockOpen(!openInfoBlock);
   };
   const ref = createRef<HTMLDivElement>();
-
-  const { push } = useHistory();
-  const onClick = useCallback(() => push(`/main/learn/${nodeId}`), [push, nodeId]);
-
-  const actions = useMemo(
-    () => [
-      { text: 'Open topic', onClick },
-      { text: 'I already know it, skip', onClick },
-    ],
-    [onClick],
-  );
 
   const isOutSideClick = useCallback(
     (event) => {
@@ -50,20 +36,23 @@ export const TopicTag: FC<Props> = (props) => {
   }, [isOutSideClick]);
 
   return (
-    <div onClick={onClick} className={classNames('topic-tag d-flex', className)} {...rest}>
-      <span>{text}</span>
+    <div
+      className={classNames('d-flex topic-tag__wrapper', className, {
+        'topic-tag__wrapper--completed': isComplete,
+      })}
+      {...rest}
+    >
+      <div className={classNames('topic-tag d-flex flex-grow-1')}>
+        <span>{text}</span>
+      </div>
       {openInfoBlock && (
-        <div ref={ref}>
-          <InfoBlock
-            className="topic-tag__content-block"
-            breadcrumb={breadCrumb}
-            nodeId={nodeId}
-            text={text}
-            actions={actions}
-          />
+        <div ref={ref} className="topic-tag__content-block">
+          {children}
         </div>
       )}
-      <span onClick={toggleInfoBlock} className="topic-tag__table-of-contents p-2 ml-auto" />
+      <div onClick={toggleInfoBlock}>
+        <div className="topic-tag__table-of-contents p-2 ml-auto" />
+      </div>
     </div>
   );
 };

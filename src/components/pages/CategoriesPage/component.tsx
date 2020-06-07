@@ -9,63 +9,17 @@ import { QueryCategories } from './index.gql';
 import { parseGQLPayload } from './services/parseGQLPayload';
 import './styles.scss';
 
-const mock = [
-  {
-    text: 'Computer Science',
-    description:
-      'Computer science is the study of processes that represented as data in the form of programs.',
-    id: 1,
-    image:
-      'https://images.unsplash.com/photo-1542064923-b4bd6908c745?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80',
-  },
-  {
-    text: 'Data Science',
-    description:
-      'Data science is field that uses many methods to extract knowledge and insights from data',
-    id: 2,
-    image:
-      'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
-  },
-  {
-    text: 'Finance',
-    description:
-      'Finance is defined as the management of money and includes activities such as investing, borrowing, lending, and forecasting.',
-    id: 3,
-    image:
-      'https://images.unsplash.com/photo-1443110189928-4448af4a2bc5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
-  },
-  {
-    text: 'IT Management',
-    description:
-      'IT management is the process of overseeing all matters related to information technology operations within an IT organization',
-    id: 4,
-    image:
-      'https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
-  },
-];
-
 export const CategoriesPage: FC<Props> = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selected, setSelected] = useState(0);
-  const [list, setList] = useState(mock);
   const toggleSuggestions = useCallback(() => setShowSuggestions((p) => !p), []);
   const { data: rawData } = useQuery<QueryCategoriesType>(QueryCategories);
-  const data = rawData?.SOG?.map(parseGQLPayload) || [];
+  const data = rawData?.Node?.map(parseGQLPayload) || [];
 
   const onChange: ChangeEventHandler<HTMLSelectElement> = useCallback((e) => {
     setSelected(+e.target.value);
   }, []);
-  useEffect(() => {
-    if (selected === 2) {
-      const a: any = mock[0];
-      const b: any = mock[1];
-      const c: any = mock[2];
-      const d: any = mock[3];
-      setList([b, a, d, c]);
-    } else {
-      setList(mock);
-    }
-  }, [selected]);
+
   return (
     <div className="d-flex flex-column categories-page">
       <div className="container-fluid categories-page__banner d-flex flex-column justify-content-center align-items-center">

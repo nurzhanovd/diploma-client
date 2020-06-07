@@ -1,34 +1,24 @@
-import React, { FC, MouseEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, MouseEventHandler, useCallback, useMemo } from 'react';
 import classNames from 'classnames';
 
-import { TopicTag } from 'components/molecules/TopicTag';
-import { getBreadCrumb } from './services/getBreadCrumb';
 import { Props } from './props';
 
 import './styles.scss';
 
 export const Row: FC<Props> = (props) => {
-  const { current, payload, isRoot, className, children } = props;
-  const { title, id, childes } = current;
+  const { isRoot, current, children, onClick, isLeaf: checkIsLeaf, getChildes, className } = props;
 
-  const isOpen = useMemo(() => props.isOpen(id), [props, id]);
+  const isOpen = useMemo(() => props.isOpen(current), [props, current]);
+  const isLeaf = useMemo(() => checkIsLeaf(current), [current, checkIsLeaf]);
+  const childes = useMemo(() => getChildes(current), [current, getChildes]);
 
-  const [breadCrumb, setBreadcrumb] = useState<string[]>([]);
-  const isLeaf = !childes.length;
-
-  useEffect(() => {
-    setBreadcrumb((prev) => (prev ? getBreadCrumb(payload, current) : prev));
-  }, [payload, current]);
-  const onClick = useCallback<MouseEventHandler<HTMLDivElement>>(
+  const handleClick = useCallback<MouseEventHandler<HTMLDivElement>>(
     (e) => {
       e.stopPropagation();
-      if (childes && childes.length) {
-        props.onClick(id);
-      }
+      onClick(current);
     },
-    [props, id, childes],
+    [current, onClick],
   );
-
   return (
     <div
       className={classNames('d-flex row-node', className, {
@@ -38,32 +28,28 @@ export const Row: FC<Props> = (props) => {
         'justify-content-between': !isOpen,
       })}
     >
-      <div className="row-node__edge" onClick={onClick}>
-        <span className="image" />
+      <div className="row-node__edge d-flex align-items-center w-100">
+        <span className="image" onClick={handleClick} />
+        <div className={classNames('flex-grow-1', { 'ml-3': !isLeaf })}>
+          {children(current, { isLeaf, isOpen, childes })}
+        </div>
       </div>
-      {isOpen ? (
-        <div className="ml-1 pl-5 row-node__childes">
+      {isOpen && (
+        <div className="row-node__childes">
           {childes?.map((n) => (
             <Row
               key={n}
               isRoot={false}
-              payload={payload}
-              current={payload.data[n]}
+              current={n}
               onClick={props.onClick}
               isOpen={props.isOpen}
-              children={children}
-            />
+              isLeaf={checkIsLeaf}
+              getChildes={getChildes}
+            >
+              {children}
+            </Row>
           ))}
         </div>
-      ) : children ? (
-        children(current, payload)
-      ) : (
-        <TopicTag
-          className={classNames('flex-grow-1',{ 'ml-3': !isLeaf })}
-          nodeId={id}
-          text={title}
-          breadCrumb={breadCrumb}
-        />
       )}
     </div>
   );
