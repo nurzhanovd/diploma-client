@@ -3,7 +3,7 @@ import { TopicTag } from 'components/molecules/TopicTag';
 import Markdown from 'react-markdown';
 
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import { fulfillNode, queryNode } from './index.gql';
 import { FulfillNode, FulfillNodeVariables } from './__generated__/FulfillNode';
 import { Node, NodeVariables } from './__generated__/Node';
@@ -51,6 +51,8 @@ export const LearnNodePage: FC<Props> = () => {
     findMaxVisibleNode,
   ]);
 
+  const { push } = useHistory();
+
   useEffect(() => {
     refs.forEach((n) => {
       if (n.current) {
@@ -67,23 +69,31 @@ export const LearnNodePage: FC<Props> = () => {
   const { title, childes, tableOfContents, content, neighbours, parent, isComplete } =
     payload || {};
 
+  const onClick = (id: any) => () => push(`/main/learn/${id}`);
+
   return payload ? (
     <div className="container d-flex flex-column learn-node-page">
       <div className="d-flex flex-column mb-4">
         <div className="mb-3">
           <h1 className="learn-node-page__title ">{`Node: ${title}`}</h1>
-          {isComplete && <h3 className="success">Completed !</h3>}
+          {isComplete && (
+            <span style={{ fontSize: 25, background: 'white' }} className="success">
+              Completed !
+            </span>
+          )}
         </div>
         <p className="learn-node-page__amount-of-topics">{`${content!.length} topics`}</p>
       </div>
       <div className="d-flex">
-        <button
-          onClick={onFulfillButtonClick}
-          type="button"
-          className="learn-node-page__complete-node-btn"
-        >
-          Complete this node
-        </button>
+        {!isComplete ? (
+          <button
+            onClick={onFulfillButtonClick}
+            type="button"
+            className="learn-node-page__complete-node-btn"
+          >
+            Complete this node
+          </button>
+        ) : null}
       </div>
       <div className="w-100 mt-4 d-flex justify-content-between mb-5">
         <div className="col-7 pl-0 d-flex flex-column markdown">
@@ -94,21 +104,23 @@ export const LearnNodePage: FC<Props> = () => {
               </div>
             ))}
           </div>
-          <div>
-            <button
-              onClick={onFulfillButtonClick}
-              type="button"
-              className="learn-node-page__complete-node-btn"
-            >
-              Complete this node
-            </button>
-          </div>
+          {!isComplete ? (
+            <div>
+              <button
+                onClick={onFulfillButtonClick}
+                type="button"
+                className="learn-node-page__complete-node-btn"
+              >
+                Complete this node
+              </button>
+            </div>
+          ) : null}
         </div>
         <div className="col-4 pr-0 justify-content-end">
           {parent && parent.text && parent.nodeId ? (
             <div className="mb-4">
               <p className="learn-node-page__topic-title mb-2">Parent Topic</p>
-              <TopicTag className="learn-node-page__topic-tag" {...parent} />
+              <TopicTag onClick={onClick(parent.nodeId)} className="learn-node-page__topic-tag" {...parent} />
             </div>
           ) : (
             <></>
@@ -118,7 +130,11 @@ export const LearnNodePage: FC<Props> = () => {
               <p className="learn-node-page__topic-title mb-2">Neighbours Topics:</p>
               <div className="d-flex flex-wrap">
                 {neighbours.map((n) => (
-                  <TopicTag className="learn-node-page__topic-tag mr-3 mb-3" {...n} />
+                  <TopicTag
+                    onClick={onClick(n.nodeId)}
+                    className="learn-node-page__topic-tag mr-3 mb-3"
+                    {...n}
+                  />
                 ))}
               </div>
             </div>
@@ -130,7 +146,11 @@ export const LearnNodePage: FC<Props> = () => {
               <p className="learn-node-page__topic-title mb-2">Next Topics:</p>
               <div className="d-flex flex-wrap">
                 {childes.map((n) => (
-                  <TopicTag className="learn-node-page__topic-tag mr-3 mb-3" {...n} />
+                  <TopicTag
+                    onClick={onClick(n.nodeId)}
+                    className="learn-node-page__topic-tag mr-3 mb-3"
+                    {...n}
+                  />
                 ))}
               </div>
             </div>

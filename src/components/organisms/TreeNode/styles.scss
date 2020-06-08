@@ -1,0 +1,7 @@
+.success {
+  background: #a6ddaf;
+
+  & > * {
+    background: inherit;
+  }
+}

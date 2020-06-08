@@ -5,6 +5,13 @@
 .nav-bar {
   min-height: var(--nav-bar-height);
 
+  .logo {
+    & > img {
+      width: 88px;
+      height: 70px;
+    }
+  }
+
   nav {
     width: 100%;
   }

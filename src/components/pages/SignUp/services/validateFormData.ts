@@ -14,7 +14,7 @@ export const validateFormData = ({
   if (!defaultCheck(username)) errors.username = 'Invalid username';
   if (!isValidEmail(email)) errors.email = 'Invalid email';
   if (!isValidPassword(password)) errors.password = 'Invalid password';
-  if (password !== confirmPassword) errors.confirmPassword = 'Passwords does not match';
+  if (password !== confirmPassword) errors.confirmPassword = 'Passwords do not match';
 
   return errors;
 };

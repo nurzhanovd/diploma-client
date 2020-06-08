@@ -24,3 +24,18 @@ export const query = gql`
     }
   }
 `;
+
+export const mergeTags = gql`
+  mutation MergeTags($tags: [String!]) {
+    MergeUserWithTags(tags: $tags)
+  }
+`;
+
+export const queryTags = gql`
+  query QueryTags {
+    Tag {
+      uuid
+      title
+    }
+  }
+`;

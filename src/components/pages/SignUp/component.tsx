@@ -1,13 +1,15 @@
-import React, { createElement, FC, useEffect, useState } from 'react';
+import React, { createElement, FC, useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import { CategoryTag } from 'components/atoms/CategoryTag';
 import { Button, FormGroup, InputGroup } from '@blueprintjs/core';
 import { Link, useHistory } from 'react-router-dom';
 import { Formik } from 'formik';
 
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import { SignUp as Register, SignUpVariables } from './__generated__/SignUp';
-import { query } from './index.gql';
+import { QueryTags } from './__generated__/QueryTags';
+import { MergeTags, MergeTagsVariables } from './__generated__/MergeTags';
+import { query, mergeTags as mergeTagsMutation, queryTags } from './index.gql';
 
 import { Props } from './props';
 import { validateFormData } from './services/validateFormData';
@@ -15,23 +17,13 @@ import './styles.scss';
 import { RegisterPayload } from './types';
 
 const defaultValue = {
-  email: 'nurzhanovdev@gmail.com',
-  username: 'daulet',
-  password: 'qwerty123',
-  confirmPassword: 'qwerty123',
+  email: '',
+  username: '',
+  password: '',
+  confirmPassword: '',
 };
 
 const Error = ({ children }: any) => createElement('span', { className: 'error-text', children });
-
-const tags = [
-  'IT',
-  'Software Development',
-  'Computer Science',
-  'Data Science',
-  'Programming Languages',
-  'IT Management',
-  'IT Journalism',
-];
 
 export const SignUp: FC<Props> = (props: Props) => {
   const { push } = useHistory();
@@ -39,8 +31,21 @@ export const SignUp: FC<Props> = (props: Props) => {
   const [errors, setErrors] = useState<Partial<Record<keyof RegisterPayload | 'general', string>>>(
     {},
   );
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [register, { loading, data }] = useMutation<Register, SignUpVariables>(query);
+  const [selectedTags, setSelectedTags] = useState<{ id: string; title: string }[]>([]);
+  const [register, { loading, data, called }] = useMutation<Register, SignUpVariables>(query);
+  const [mergeTags, { loading: mergingLoading }] = useMutation<MergeTags, MergeTagsVariables>(
+    mergeTagsMutation,
+  );
+  const { data: rawTags } = useQuery<QueryTags>(queryTags);
+
+  const tags = useMemo(
+    () =>
+      rawTags?.Tag?.map((n) => ({
+        id: n?.uuid || '',
+        title: n?.title || '',
+      })) || [],
+    [rawTags],
+  );
 
   const onValidate = (errorsField: Record<keyof RegisterPayload, string>) => {
     const errorList = validateFormData(errorsField);
@@ -48,14 +53,25 @@ export const SignUp: FC<Props> = (props: Props) => {
     return errorList;
   };
 
-  const onSubmit = (values: SignUpVariables) => {
+  const onSubmit = async (values: SignUpVariables) => {
     setErrors({});
     register({ variables: values });
   };
 
+  const onMergeTags = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    if (selectedTags.length) {
+      mergeTags({ variables: { tags: selectedTags.map((n) => n.id) } });
+      push('/about');
+    }
+  };
+
   useEffect(() => {
-    if (data?.SignUp?.errors) {
+    if (data?.SignUp?.errors?.length) {
       setErrors(Object.fromEntries(data.SignUp.errors.map((n: any) => [n?.key, n?.value])));
+    } else if (data?.SignUp?.token) {
+      localStorage.setItem('token', data.SignUp.token);
+      setStep(2);
     }
   }, [data]);
   return (
@@ -164,8 +180,8 @@ export const SignUp: FC<Props> = (props: Props) => {
           <p className="tag-list__text mb-2">Choose what you want to learn</p>
           <div className="d-flex flex-wrap">
             {selectedTags.map((n) => (
-              <div key={n} className="d-flex selected-tag mb-2">
-                <span className="selected-tag__text">{n}</span>
+              <div key={n.id} className="d-flex selected-tag mb-2">
+                <span className="selected-tag__text">{n.title}</span>
                 <span
                   onClick={() => setSelectedTags((s) => s.filter((m) => n !== m))}
                   className="selected-tag__close"
@@ -178,13 +194,13 @@ export const SignUp: FC<Props> = (props: Props) => {
           <div className="d-flex flex-wrap">
             {tags.map((n) => (
               <CategoryTag
-                key={n}
-                title={n}
+                key={n.id}
+                title={n.title}
                 onClick={() => {
                   setSelectedTags((s) => [...s, n]);
                 }}
                 className={classNames('sign-up__category-tag', {
-                  'd-none': selectedTags.includes(n),
+                  'd-none': selectedTags.find((m) => n.id === m.id),
                 })}
               />
             ))}
@@ -194,10 +210,7 @@ export const SignUp: FC<Props> = (props: Props) => {
             rightIcon="chevron-right"
             text="Next"
             className="w-100 mt-3 sign-up__submit-button"
-            onClick={(e: React.MouseEvent<HTMLElement>) => {
-              e.preventDefault();
-              push('/about');
-            }}
+            onClick={onMergeTags}
             large
             outlined
           />

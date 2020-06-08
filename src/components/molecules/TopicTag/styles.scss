@@ -1,25 +1,23 @@
 .topic-tag__wrapper {
   position: relative;
-
+  background: #ededed;
   & > * {
     background: #ededed;
   }
 
   &--completed {
+    background: #a6ddaf !important;
     & > * {
-      background: #a6ddaf;
+      background: #a6ddaf !important;
     }
   }
 }
 .topic-tag {
-  z-index: -5;
   background: #ededed;
   border-radius: 2px;
   padding: 4px;
   font-size: 12px;
   cursor: pointer;
-
-
 
   &__content-block {
     z-index: 1;

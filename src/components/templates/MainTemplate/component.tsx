@@ -13,7 +13,7 @@ import './styles.scss';
 const links = [
   { path: '/about', text: 'About' },
   { path: '/main/categories', text: 'Categories' },
-  { path: '/main/profile', text: 'Profile' },
+  { path: '/main/roadmaps', text: 'Roadmaps' },
 ];
 
 export const MainTemplate: FC<Props> = () => {
@@ -24,7 +24,7 @@ export const MainTemplate: FC<Props> = () => {
       </header>
       <main className="mt-5">
         <Switch>
-          <Route path="/main/profile">
+          <Route path="/main/roadmaps">
             <ProfilePage />
           </Route>
           <Route exact path="/main/categories">

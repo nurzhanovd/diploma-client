@@ -5,8 +5,11 @@ import { InfoBlock } from 'components/molecules/InfoBlock';
 import { TopicTag } from 'components/molecules/TopicTag';
 
 import { useHistory } from 'react-router';
+import classNames from 'classnames';
 import { Props } from './props';
 import { getBreadCrumb } from './services/getBreadCrumb';
+
+import './styles.scss';
 
 export const TreeNode: FC<Props> = (props) => {
   const { id, className } = props;
@@ -15,7 +18,6 @@ export const TreeNode: FC<Props> = (props) => {
   const [breadCrumb, setBreadcrumb] = useState<string[]>([]);
   const { title, tableOfContents, completed } = useMemo(() => nodes[id], [id, nodes]);
   const handleNodeClick = useCallback(() => push(`/main/learn/${id}`), [id, push]);
-
   useEffect(() => {
     setBreadcrumb((prev) => (prev ? getBreadCrumb(nodes, nodes[id]) : prev));
   }, [nodes, id]);
@@ -26,7 +28,7 @@ export const TreeNode: FC<Props> = (props) => {
     return rowChildes.length ? `${doneLength}/${rowChildes.length}` : '';
   }, [id, nodes]);
   return (
-    <TopicTag className={className} text={`${title} ${status}`}>
+    <TopicTag className={classNames(className, { success: completed })} text={`${title} ${status}`}>
       <InfoBlock
         nodeId={id}
         text={title}

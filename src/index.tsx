@@ -14,6 +14,8 @@ import 'bootstrap-4-grid/css/grid.min.css';
 
 import 'core/styles/default.scss';
 
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

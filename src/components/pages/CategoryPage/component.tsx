@@ -1,5 +1,5 @@
 import { Icon, Intent } from '@blueprintjs/core';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { ExpandableCourse } from 'components/organisms/ExpandableCourse';
 import { useQuery } from '@apollo/react-hooks';
@@ -21,13 +21,31 @@ export const CategoryPage: FC<Props> = (props) => {
   const onBackClick = useCallback(() => push('/main/categories'), [push]);
   const onRoadMapClick = useCallback(() => push(`/main/create-roadmap?category=${id}`), [push, id]);
 
-  const { data, loading } = useQuery<RST, TreeNodeVariables>(TreeNode, { variables: { id } });
+  const { data, loading, refetch } = useQuery<RST, TreeNodeVariables>(TreeNode, {
+    variables: { id },
+  });
+
+  useEffect(() => {
+    if (data) {
+      refetch({ id });
+    }
+  }, []);
 
   useEffect(() => {
     if (data) {
       const parsed = parseRST(data);
       if (parsed) {
-        addNodes(Object.fromEntries(parsed.map((n) => [n.id, n])));
+        const res = Object.fromEntries(parsed.map((n) => [n.id, n]));
+        const payload = parsed.map((n) => {
+          if (n.childes.length) {
+            return {
+              ...n,
+              completed: n.childes.every((nid) => res[nid].completed),
+            };
+          }
+          return n;
+        });
+        addNodes(Object.fromEntries(payload.map((n) => [n.id, n])));
       }
     }
   }, [data, addNodes, parseRST]);
