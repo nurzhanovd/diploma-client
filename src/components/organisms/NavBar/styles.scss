@@ -6,7 +6,10 @@
   min-height: var(--nav-bar-height);
 
   .logo {
-    background: url("/images/logo.png");
+    & > img {
+      width: 88px;
+      height: 70px;
+    }
   }
 
   nav {

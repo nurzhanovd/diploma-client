@@ -32,7 +32,9 @@ export const NavBar: FC<Props> = (props) => {
     <div
       className={classNames('nav-bar d-flex justify-content-between align-items-center', className)}
     >
-      <div className="logo" />
+      <div className="logo">
+        <img src="/images/logo.png" alt="logo" />
+      </div>
       <div className="d-flex justify-content-between align-items-center">
         <Icon onClick={toggleSearch} className="nav-bar__search-icon" icon="search" iconSize={18} />
         <nav className="d-flex align-items-center">

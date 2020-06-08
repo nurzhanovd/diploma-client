@@ -5,6 +5,8 @@ export const QueryCategories = gql`
     Node(filter: { root: true }) @include(if: $default) {
       title
       uuid
+      description
+      image
     }
     SuggestedRelatedNodes @include(if: $suggestion) {
       title

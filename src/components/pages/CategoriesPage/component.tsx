@@ -23,6 +23,8 @@ export const CategoriesPage: FC<Props> = () => {
   >(QueryCategories);
   const data = useMemo(() => {
     const k = showSuggestions ? rawData?.SuggestedRelatedNodes || [] : rawData?.Node;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
     return k?.map(parseGQLPayload);
   }, [rawData]);
 
@@ -58,7 +60,7 @@ export const CategoriesPage: FC<Props> = () => {
         </h2>
         <div className="d-flex row px-0">
           {data ? (
-            data?.map((n) => (
+            data?.map((n: any) => (
               <div className="col-4 mb-5" key={n.id}>
                 <CategoryCard {...n} />
               </div>

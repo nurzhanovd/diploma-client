@@ -616,6 +616,16 @@ input _NodeFilter {
   description_not_starts_with: String
   description_ends_with: String
   description_not_ends_with: String
+  image: String
+  image_not: String
+  image_in: [String!]
+  image_not_in: [String!]
+  image_contains: String
+  image_not_contains: String
+  image_starts_with: String
+  image_not_starts_with: String
+  image_ends_with: String
+  image_not_ends_with: String
   childes: _NodeFilter
   childes_not: _NodeFilter
   childes_in: [_NodeFilter!]
@@ -643,6 +653,8 @@ enum _NodeOrdering {
   title_desc
   description_asc
   description_desc
+  image_asc
+  image_desc
   isComplete_asc
   isComplete_desc
   _id_asc
@@ -945,10 +957,10 @@ type Mutation {
   AddNodeParent(from: _NodeInput!, to: _NodeInput!): _AddNodeParentPayload
   RemoveNodeParent(from: _NodeInput!, to: _NodeInput!): _RemoveNodeParentPayload
   MergeNodeParent(from: _NodeInput!, to: _NodeInput!): _MergeNodeParentPayload
-  CreateNode(uuid: ID, root: Boolean, title: String!, description: String, content: [String]): Node
-  UpdateNode(uuid: ID!, root: Boolean, title: String, description: String, content: [String]): Node
+  CreateNode(uuid: ID, root: Boolean, title: String!, description: String, content: [String], image: String): Node
+  UpdateNode(uuid: ID!, root: Boolean, title: String, description: String, content: [String], image: String): Node
   DeleteNode(uuid: ID!): Node
-  MergeNode(uuid: ID!, root: Boolean, title: String, description: String, content: [String]): Node
+  MergeNode(uuid: ID!, root: Boolean, title: String, description: String, content: [String], image: String): Node
   AddLeafParent(from: _NodeInput!, to: _LeafInput!): _AddLeafParentPayload
   RemoveLeafParent(from: _NodeInput!, to: _LeafInput!): _RemoveLeafParentPayload
   MergeLeafParent(from: _NodeInput!, to: _LeafInput!): _MergeLeafParentPayload
@@ -1005,6 +1017,7 @@ type Node {
   title: String!
   description: String
   content: [String]
+  image: String
   childes(first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
   parent(filter: _NodeFilter): Node
   isComplete: Boolean
@@ -1026,7 +1039,7 @@ type Query {
   GetRoadMap(uuid: String, filter: _GetRoadMapResponseFilter): GetRoadMapResponse
   DauletGetUserRoadMapID: [String]
   File(filename: ID, mimetype: String, encoding: String, _id: String, first: Int, offset: Int, orderBy: [_FileOrdering], filter: _FileFilter): [File]
-  Node(uuid: ID, root: Boolean, title: String, description: String, content: String, isComplete: Boolean, _id: String, first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
+  Node(uuid: ID, root: Boolean, title: String, description: String, content: String, image: String, isComplete: Boolean, _id: String, first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
   Leaf(uuid: ID, root: Boolean, title: String, description: String, content: String, isComplete: Boolean, _id: String, first: Int, offset: Int, orderBy: [_LeafOrdering], filter: _LeafFilter): [Leaf]
   Branch(uuid: ID, root: Boolean, title: String, description: String, content: String, isComplete: Boolean, _id: String, first: Int, offset: Int, orderBy: [_BranchOrdering], filter: _BranchFilter): [Branch]
   Tag(uuid: ID, title: String, _id: String, first: Int, offset: Int, orderBy: [_TagOrdering], filter: _TagFilter): [Tag]

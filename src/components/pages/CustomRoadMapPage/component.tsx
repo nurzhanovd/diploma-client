@@ -51,10 +51,6 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
   const [selectedRoadMapNode, setSelectedRoadMapNode] = useState<ID>(1);
   const [editableRoadMapNode, setEditableRoadMapNode] = useState<ID>(1);
 
-  useEffect(() => {
-    console.log(nodes);
-  }, [nodes]);
-
   const selectRoadMapNode = useCallback(
     (id: ID): any => (e: any) => {
       e.stopPropagation();
@@ -86,6 +82,7 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
       if (v && editableRoadMapNode) {
         changeRoadMapTitle({ id: editableRoadMapNode, title: v });
         setEditableRoadMapNode('');
+        setRoadmapTitle('');
       }
     },
     [roadmapTitle],
@@ -183,15 +180,9 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
       <header className="container-fluid road-map__header d-flex flex-column">
         <h1 className="road-map__title">Make your own roadmap</h1>
         <p className="road-map__text">
-          Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece
-          of classical Latin literature from 45 BC, making it over 2000 years old. Richard
-          McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the
-          more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the
-          cites of the word in classical literature, discovered the undoubtable source.
+          A knowledge map is a visual aid that shows where knowledge can be found within a group or organization, and how to find those with the most expertise. «Knowledge is a high-value form of information that is ready to apply to decisions and actions, [and that] knowledge derives from information as information derives from data.»
+
         </p>
-        <button className="road-map__action" type="button">
-          Create new one
-        </button>
       </header>
       <div
         style={{ height: 5000 }}

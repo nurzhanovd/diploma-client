@@ -2,6 +2,7 @@
   position: relative;
 
   &__header {
+    z-index: -100;
     height: 500px;
     margin-top: -3rem;
     background: url("/images/roadmap.jpg");

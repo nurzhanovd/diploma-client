@@ -1,11 +1,12 @@
 .topic-tag__wrapper {
   position: relative;
-
+  background: #ededed;
   & > * {
     background: #ededed;
   }
 
   &--completed {
+    background: #a6ddaf !important;
     & > * {
       background: #a6ddaf !important;
     }

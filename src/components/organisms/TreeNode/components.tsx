@@ -18,7 +18,6 @@ export const TreeNode: FC<Props> = (props) => {
   const [breadCrumb, setBreadcrumb] = useState<string[]>([]);
   const { title, tableOfContents, completed } = useMemo(() => nodes[id], [id, nodes]);
   const handleNodeClick = useCallback(() => push(`/main/learn/${id}`), [id, push]);
-
   useEffect(() => {
     setBreadcrumb((prev) => (prev ? getBreadCrumb(nodes, nodes[id]) : prev));
   }, [nodes, id]);
