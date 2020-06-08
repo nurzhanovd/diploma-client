@@ -14,6 +14,10 @@ export const NavBar: FC<Props> = (props) => {
   const toggleSearch = useCallback(() => setShowSearch((p) => !p), []);
   const history = useHistory();
   const onLogOutClick = useCallback(() => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('uuid');
+    localStorage.removeItem('email');
     LogOut.show({
       message: 'Goodbye, see you soon',
       intent: Intent.PRIMARY,
