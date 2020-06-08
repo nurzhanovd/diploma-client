@@ -44,14 +44,6 @@ export const CategoriesPage: FC<Props> = () => {
       </div>
       <div className="container-fluid categories-page__filter d-flex align-items-center">
         <div className="container d-flex align-items-center">
-          <p className="mr-4">Filter by:</p>
-          <div className="bp3-select bp3-large">
-            <select value={selected} onChange={onChange}>
-              <option value="0">Category</option>
-              <option value="1">Recently Added</option>
-              <option value="2">Popular</option>
-            </select>
-          </div>
           <Switch
             className="ml-auto mb-0"
             checked={showSuggestions}

@@ -17,10 +17,10 @@ import './styles.scss';
 import { RegisterPayload } from './types';
 
 const defaultValue = {
-  email: 'nurzhanovdev@gmail.comq',
-  username: 'dauletq',
-  password: 'qwerty123',
-  confirmPassword: 'qwerty123',
+  email: '',
+  username: '',
+  password: '',
+  confirmPassword: '',
 };
 
 const Error = ({ children }: any) => createElement('span', { className: 'error-text', children });

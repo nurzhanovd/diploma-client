@@ -5,6 +5,10 @@
 .nav-bar {
   min-height: var(--nav-bar-height);
 
+  .logo {
+    background: url("/images/logo.png");
+  }
+
   nav {
     width: 100%;
   }

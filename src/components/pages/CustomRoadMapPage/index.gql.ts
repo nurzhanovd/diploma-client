@@ -12,11 +12,8 @@ export const query = gql`
   }
 `;
 
-export const queryCategories = gql`
-  query Categories {
-    Node(root: true) {
-      uuid
-      title
-    }
+export const addNewRoadMap = gql`
+  mutation AddNewRoadMap($data: [RoadMapInput]) {
+    CreateRoadMap(roadMap: $data)
   }
 `;

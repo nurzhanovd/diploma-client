@@ -1,4 +1,4 @@
-import { useLazyQuery } from '@apollo/react-hooks';
+import { useLazyQuery, useMutation } from "@apollo/react-hooks";
 import debounce from 'debounce';
 import React, { ChangeEventHandler, FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { TopicTag } from 'components/molecules/TopicTag';
@@ -13,13 +13,15 @@ import {
   deleteNodeFromRoadMapAction,
   ID,
   Node,
+  RoadMapNode,
   changeRoadMapTitleAction,
 } from 'store/nodes';
 import { v4 as uuid } from 'uuid';
 
 import { useAction, useAtom } from '@reatom/react';
-import { query } from './index.gql';
+import { query, addNewRoadMap } from './index.gql';
 import { Search, SearchVariables } from './__generated__/Search';
+import { AddNewRoadMap, AddNewRoadMapVariables } from './__generated__/AddNewRoadMap';
 
 import { Props } from './props';
 import './styles.scss';
@@ -29,6 +31,11 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
   const [searchNodes, { data: rawSearchNodes, loading }] = useLazyQuery<Search, SearchVariables>(
     query,
   );
+
+  const [addRoadMap, { loading: addRoadmapLoading }] = useMutation<
+    AddNewRoadMap,
+    AddNewRoadMapVariables
+  >(addNewRoadMap);
 
   const nodes = useAtom(roadMapNodesAtom);
   const addNodes = useAction(addNodesToRoadMapAction);
@@ -155,6 +162,22 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
     const { parentId } = nodes[id];
   };
 
+  const saveRoadMap = () => {
+    addRoadMap({
+      variables: {
+        data: Object.entries(nodes)
+          .filter((n) => n[1].type === 'Roadmap')
+          .map((n) => n[1] as RoadMapNode)
+          .map((n) => ({
+            uuid: (n.id === 1 ? uuid() : n.id) as string,
+            title: n.title,
+            next: n.next as string[],
+            nodes: n.nodes as string[],
+          })),
+      },
+    });
+  };
+
   return (
     <div className={classNames('d-flex flex-column road-map', className)} {...rest}>
       <header className="container-fluid road-map__header d-flex flex-column">
@@ -172,101 +195,110 @@ export const CustomRoadMapPage: FC<Props> = (props) => {
       </header>
       <div
         style={{ height: 5000 }}
-        className="container-fluid road-map__tree mt-3 d-flex justify-content-between mt-5"
+        className="container-fluid road-map__tree mt-3 d-flex flex-column mt-5"
       >
-        <div className="col-7">
-          <Row
-            isRoot={true}
-            current={1}
-            onClick={onClick}
-            isOpen={isOpen}
-            isLeaf={isLeaf}
-            getChildes={getChildes}
-          >
-            {(id) => {
-              const { title, type, parentId } = nodes[id];
-              const isEdit = id === editableRoadMapNode;
-              if (type === 'Roadmap') {
-                return (
-                  <div className="d-flex">
-                    <FormGroup className="mb-0 mr-3" labelInfo="(required)">
-                      <InputGroup
-                        onChange={onRoadMapTitleChange}
-                        disabled={!isEdit}
-                        value={isEdit ? roadmapTitle : title}
-                      />
-                    </FormGroup>
-                    <Button onClick={selectRoadMapNode(id)} className="mr-3" icon="select">
-                      Pick
-                    </Button>
-                    {isEdit ? (
-                      <Button onClick={updateRoadMapField} className="mr-3" icon="edit">
-                        Save
-                      </Button>
-                    ) : (
-                      <Button onClick={selectEditableMapNode(id)} className="mr-3" icon="edit">
-                        Edit
-                      </Button>
-                    )}
-                    <Button onClick={addNewRoadmapNode(id)} className="mr-3" icon="git-new-branch">
-                      Add branch
-                    </Button>
-                    {parentId && <Button onClick={onDeleteFromRoadMapNode(id)}>Delete</Button>}
-                  </div>
-                );
-              }
-              return (
-                <TopicTag
-                  isComplete={(nodes[id] as Node).completed}
-                  className="road-map__foundNodes mb-3 mr-3"
-                  key={id}
-                  text={title}
-                >
-                  <InfoBlock
-                    isComplete={(nodes[id] as Node).completed}
-                    nodeId={id}
-                    text={title}
-                    tableOfContents={[]}
-                    actions={[{ text: 'Delete Node', onClick: deleteNodeFromRoadMap }]}
-                  />
-                </TopicTag>
-              );
-            }}
-          </Row>
+        <div>
+          <Button onClick={saveRoadMap}>Save Roadmap</Button>
         </div>
-        <div className="col-5">
-          <div className="d-flex flex-column road-map__form">
-            <FormGroup
-              helperText="Find what you want to learn by keywords"
-              label="Search"
-              labelFor="text-input"
-              labelInfo="(required)"
+        <div className="d-flex">
+          <div className="col-7">
+            <Row
+              isRoot={true}
+              current={1}
+              onClick={onClick}
+              isOpen={isOpen}
+              isLeaf={isLeaf}
+              getChildes={getChildes}
             >
-              <InputGroup onChange={onSearchChange} leftIcon="search" id="search" />
-            </FormGroup>
+              {(id) => {
+                const { title, type, parentId } = nodes[id];
+                const isEdit = id === editableRoadMapNode;
+                if (type === 'Roadmap') {
+                  return (
+                    <div className="d-flex">
+                      <FormGroup className="mb-0 mr-3" labelInfo="(required)">
+                        <InputGroup
+                          onChange={onRoadMapTitleChange}
+                          disabled={!isEdit}
+                          value={isEdit ? roadmapTitle : title}
+                        />
+                      </FormGroup>
+                      <Button onClick={selectRoadMapNode(id)} className="mr-3" icon="select">
+                        Pick
+                      </Button>
+                      {isEdit ? (
+                        <Button onClick={updateRoadMapField} className="mr-3" icon="edit">
+                          Save
+                        </Button>
+                      ) : (
+                        <Button onClick={selectEditableMapNode(id)} className="mr-3" icon="edit">
+                          Edit
+                        </Button>
+                      )}
+                      <Button
+                        onClick={addNewRoadmapNode(id)}
+                        className="mr-3"
+                        icon="git-new-branch"
+                      >
+                        Add branch
+                      </Button>
+                      {parentId && <Button onClick={onDeleteFromRoadMapNode(id)}>Delete</Button>}
+                    </div>
+                  );
+                }
+                return (
+                  <TopicTag
+                    isComplete={(nodes[id] as Node).completed}
+                    className="road-map__foundNodes mb-3 mr-3"
+                    key={id}
+                    text={title}
+                  >
+                    <InfoBlock
+                      isComplete={(nodes[id] as Node).completed}
+                      nodeId={id}
+                      text={title}
+                      tableOfContents={[]}
+                      actions={[{ text: 'Delete Node', onClick: deleteNodeFromRoadMap }]}
+                    />
+                  </TopicTag>
+                );
+              }}
+            </Row>
+          </div>
+          <div className="col-5">
+            <div className="d-flex flex-column road-map__form">
+              <FormGroup
+                helperText="Find what you want to learn by keywords"
+                label="Search"
+                labelFor="text-input"
+                labelInfo="(required)"
+              >
+                <InputGroup onChange={onSearchChange} leftIcon="search" id="search" />
+              </FormGroup>
 
-            <div className="d-flex flex-wrap mt-5">
-              {foundNodes.map((n) => (
-                <TopicTag
-                  isComplete={Boolean(n.completed)}
-                  className="road-map__foundNodes mb-3 mr-3"
-                  key={n.id}
-                  text={n.title}
-                >
-                  <InfoBlock
+              <div className="d-flex flex-wrap mt-5">
+                {foundNodes.map((n) => (
+                  <TopicTag
                     isComplete={Boolean(n.completed)}
-                    nodeId={n.id}
+                    className="road-map__foundNodes mb-3 mr-3"
+                    key={n.id}
                     text={n.title}
-                    actions={[
-                      {
-                        text: `Add to ${nodes[selectedRoadMapNode].title}`,
-                        onClick: onAddRoadMapClick,
-                      },
-                    ]}
-                    tableOfContents={n.tableOfContents}
-                  />
-                </TopicTag>
-              ))}
+                  >
+                    <InfoBlock
+                      isComplete={Boolean(n.completed)}
+                      nodeId={n.id}
+                      text={n.title}
+                      actions={[
+                        {
+                          text: `Add to ${nodes[selectedRoadMapNode].title}`,
+                          onClick: onAddRoadMapClick,
+                        },
+                      ]}
+                      tableOfContents={n.tableOfContents}
+                    />
+                  </TopicTag>
+                ))}
+              </div>
             </div>
           </div>
         </div>

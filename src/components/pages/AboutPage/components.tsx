@@ -36,31 +36,25 @@ export const AboutPage: FC<Props> = (props: Props) => {
         <section className="main-page__section">
           <h2 className="main-page__slogan">Get knowledge in a new format</h2>
           <p className="main-page__description">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
-            has been the industry's standard dummy text ever since the 1500s, when an unknown
-            printer took a galley of type and scrambled it to make a type specimen book. It has
-            survived not only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged.
+            New type of educational platforms based on a dynamic data structures, in particular graphs,
+            due to the creation of a more flexible approach to obtaining new knowledge compared to modern e-learning systems.
+            Moreover, the new educational platform is an improved process of creating and delivering educational material with help of graphs for
+            the representation of data.
           </p>
         </section>
         <section className="main-page__section">
           <h2 className="main-page__slogan">Contribute to our knowledge source</h2>
           <p className="main-page__description">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
-            has been the industry's standard dummy text ever since the 1500s, when an unknown
-            printer took a galley of type and scrambled it to make a type specimen book. It has
-            survived not only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged.
+            Web application helps to introduce new technologies into educational programs and increase the popularity of online platforms in various field of activity.
+            Proposed educational platform is focused on helping students in obtaining needed technical capabilities that can be achieved through development of more personalized online learning strategies,
+            which are believed to be effective in accomplishing of professional and academic objectives.
+            The implementation of an educational platform also helps to expand the use of graphs in other information systems.
           </p>
         </section>
         <section className="main-page__section">
           <h2 className="main-page__slogan">Create your own paths</h2>
           <p className="main-page__description">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
-            has been the industry's standard dummy text ever since the 1500s, when an unknown
-            printer took a galley of type and scrambled it to make a type specimen book. It has
-            survived not only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged.
+            Our educational platform represents various types of knowledge nodes in the form of graphs and called «Knowledge Maps». The goal of Knowledge Maps is to close the gap between accessibility and discoverability of scientific knowledge
           </p>
         </section>
         <section className="main-page__section">

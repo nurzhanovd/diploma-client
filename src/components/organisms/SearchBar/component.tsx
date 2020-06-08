@@ -1,24 +1,44 @@
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
-import React, { FC } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
+import deb from 'debounce';
 import { Icon } from '@blueprintjs/core';
-
+import { useLazyQuery } from '@apollo/react-hooks';
+import { fetchQuery } from './index.gql';
 import { Props } from './props';
 import './styles.scss';
 
-const categories = ['OOP', 'Functional Programming', 'Algorithms', 'CI/CD'];
-const roadmap = [
-  'Frontend',
-  'Backend',
-  'Data Engineering',
-  'DevOps',
-  'Product Owner',
-  'Product Management',
-];
-const nodes = ['Merge Sort', 'BFS', 'IP/TCP', 'Monads', 'Memory Leaks', 'Heap'];
+import { SearchBar as Data, SearchBarVariables } from './__generated__/SearchBar';
 
 export const SearchBar: FC<Props> = (props) => {
   const { onClose, className, ...rest } = props;
+  const [searchText, setSearchText] = useState('');
+  const [fetchSearch, { data }] = useLazyQuery<Data, SearchBarVariables>(fetchQuery);
+  const debounce = deb((text: string) => {
+    fetchSearch({ variables: { text: text.trim() } });
+  }, 250);
+
+  const [branch, leaf] = useMemo(() => {
+    if (data?.Branch && data.Leaf) {
+      const br =
+        data.Branch.map((n) => ({
+          id: n?.uuid || '',
+          title: n?.title || '',
+        })) || [];
+      const lf =
+        data.Leaf.map((n) => ({
+          id: n?.uuid || '',
+          title: n?.title || '',
+        })) || [];
+      return [br, lf];
+    }
+    return [[], []];
+  }, [data]);
+
+  useEffect(() => {
+    debounce(searchText);
+  }, [searchText]);
+
   return (
     <div
       className={classNames('search-bar d-flex flex-column align-items-center', className)}
@@ -31,7 +51,11 @@ export const SearchBar: FC<Props> = (props) => {
           color="white"
           icon="search"
         />
-        <input placeholder="Search" className="search-bar__input" />
+        <input
+          onChange={(e) => setSearchText(e.target.value)}
+          placeholder="Search"
+          className="search-bar__input"
+        />
         <Icon
           onClick={onClose}
           className="ml-auto d-flex align-items-center search-bar__close-icon"
@@ -44,45 +68,44 @@ export const SearchBar: FC<Props> = (props) => {
         <div className="w-100 d-flex justify-content-between">
           <div className="d-flex flex-column search-bar__nodes col-4">
             <div className="d-flex flex-column mb-5">
-              <p className="search-bar__title w-50 d-flex">Themes</p>
+              <p className="search-bar__title w-50 d-flex">Nodes</p>
               <ul className="search-bar__nodes-list d-flex flex-column">
-                {categories.map((n) => (
-                  <div key={n} className="d-flex search-bar__item mb-2 p-3">
-                    <Icon icon="git-branch" color="white" iconSize={16} className="mr-3" />
-                    <p>{n}</p>
+                {leaf.length ? (
+                  leaf.map((n) => (
+                    <Link to={`/main/learn/${n.id}`}>
+                      <div onClick={onClose} key={n.id} className="d-flex search-bar__item mb-2 p-3">
+                        <Icon icon="git-commit" color="white" iconSize={16} className="mr-3" />
+                        <p>{n.title}</p>
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <div className="d-flex search-bar__item search-bar__road-map mb-4 p-3">
+                    <Icon className="mr-3" icon="git-commit" color="white" iconSize={16} />
+                    <p>No Data</p>
                   </div>
-                ))}
+                )}
               </ul>
-              <Link to="/main/learn/1">
-                <p className="search-bar__node-link">Check all</p>
-              </Link>
-            </div>
-            <div>
-              <p className="d-flex w-75 mb-4 search-bar__title">Learning Nodes</p>
-              <div className="d-flex flex-wrap">
-                {nodes.map((n) => (
-                  <div key={n} className="d-flex search-bar__item search-bar__node-item m-2">
-                    <Icon
-                      icon="git-commit"
-                      color="white"
-                      iconSize={16}
-                      className="mr-3 d-flex align-items-center"
-                    />
-                    <span>{n}</span>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
           <div className="col-6">
-            <p className="search-bar__title w-50">Road Maps</p>
+            <p className="search-bar__title w-50">Learn: </p>
             <ul className="search-bar__nodes-list d-flex flex-column mt-4 px-0">
-              {roadmap.map((n) => (
-                <div key={n} className="d-flex search-bar__item search-bar__road-map mb-4 p-3">
-                  <Icon icon="map-create" color="white" iconSize={16} className="mr-3" />
-                  <p>{n}</p>
+              {branch.length ? (
+                branch.map((n) => (
+                  <Link to={`/main/learn/${n.id}`}>
+                    <div onClick={onClose} key={n.id} className="d-flex search-bar__item search-bar__road-map mb-4 p-3">
+                      <Icon icon="git-branch" color="white" iconSize={16} className="mr-3" />
+                      <p>{n.title}</p>
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                <div className="d-flex search-bar__item search-bar__road-map mb-4 p-3">
+                  <Icon className="mr-3" icon="git-branch" color="white" iconSize={16} />
+                  <p>No Data</p>
                 </div>
-              ))}
+              )}
             </ul>
           </div>
         </div>

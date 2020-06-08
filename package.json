@@ -9,7 +9,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint -c .eslintrc --max-warnings 0 --cache --ext .ts,.tsx .",
     "apollo": "run-s apollo:clean apollo:download apollo:codegen",
-    "apollo:codegen": "apollo client:codegen --includes=**/*.gql.ts --excludes=schema.graphql --target=typescript --passthroughCustomScalars",
+    "apollo:codegen": "apollo client:codegen --includes=**/*.gql.ts --excludes=schema.graphql --target=typescript --passthroughCustomScalars --globalTypesFile=src/__generated__/type.ts",
     "apollo:download": "apollo client:download-schema schema.graphql",
     "apollo:clean": "run-p apollo:clean:*",
     "apollo:clean:schema": "rm -f schema.graphql",

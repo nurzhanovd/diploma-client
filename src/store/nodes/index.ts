@@ -23,22 +23,24 @@ export const nodesAtom = declareAtom<Record<string, Node>>('Node', {}, (on) => [
   })),
 ]);
 
-type RoadMapNode =
-  | {
-      type: 'Roadmap';
-      title: string;
-      id: ID;
-      childes: ID[];
-      parentId?: ID;
-    }
-  | ({ type: 'Node' } & Node);
+export type RoadMapNode = {
+  type: 'Roadmap';
+  title: string;
+  id: ID;
+  childes: ID[];
+  next: ID[];
+  nodes: ID[];
+  parentId?: ID;
+};
+
+type Union = RoadMapNode | ({ type: 'Node' } & Node);
 
 export const addNodesToRoadMapAction = declareAction<Record<ID, RoadMapNode>>();
 export const changeRoadMapTitleAction = declareAction<{ id: ID; title: string }>();
 export const addNodeToRoadmapNodeAction = declareAction<{ node: Node; roadmapId: ID }>();
 export const addNewRoadMapNodeAction = declareAction<{ parentRoadMap: ID }>();
 export const deleteNodeFromRoadMapAction = declareAction<ID>();
-export const roadMapNodesAtom = declareAtom<Record<string, RoadMapNode>>(
+export const roadMapNodesAtom = declareAtom<Record<string, Union>>(
   'Node',
   {
     1: {
@@ -46,6 +48,8 @@ export const roadMapNodesAtom = declareAtom<Record<string, RoadMapNode>>(
       title: 'Roadmap',
       id: 1,
       childes: [],
+      next: [],
+      nodes: [],
     },
   },
   (on) => [
@@ -61,13 +65,14 @@ export const roadMapNodesAtom = declareAtom<Record<string, RoadMapNode>>(
       },
     })),
     on(addNodeToRoadmapNodeAction, (state, { node, roadmapId }) => {
-      const { childes: oldChildes, ...rest } = state[roadmapId];
+      const { childes: oldChildes, nodes, ...rest } = state[roadmapId] as RoadMapNode;
       const childes = [...oldChildes, node.id];
       return {
         ...state,
         [roadmapId]: {
           ...rest,
           childes,
+          nodes: [...nodes, node.id],
         },
         [node.id]: {
           ...node,
@@ -78,18 +83,21 @@ export const roadMapNodesAtom = declareAtom<Record<string, RoadMapNode>>(
     }),
     on(addNewRoadMapNodeAction, (state, { parentRoadMap }) => {
       const id = uuid();
-      const { childes: oldChildes, ...rest } = state[parentRoadMap];
+      const { childes: oldChildes, next, ...rest } = state[parentRoadMap] as RoadMapNode;
       const childes = [...oldChildes, id];
       return {
         ...state,
         [parentRoadMap]: {
           ...rest,
           childes,
+          next: [...next, id],
         },
         [id]: {
           id,
           title: 'New Roadmap Node',
           childes: [],
+          nodes: [],
+          next: [],
           parentId: parentRoadMap,
           type: 'Roadmap',
         },

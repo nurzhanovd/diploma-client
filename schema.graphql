@@ -42,6 +42,11 @@ directive @connection(
   filter: [String!]
 ) on FIELD
 
+type _AddBranchParentPayload {
+  from: Node
+  to: Branch
+}
+
 type _AddLeafParentPayload {
   from: Node
   to: Leaf
@@ -158,6 +163,66 @@ enum _AuthPayloadOrdering {
   email_desc
   username_asc
   username_desc
+  _id_asc
+  _id_desc
+}
+
+input _BranchFilter {
+  AND: [_BranchFilter!]
+  OR: [_BranchFilter!]
+  uuid: ID
+  uuid_not: ID
+  uuid_in: [ID!]
+  uuid_not_in: [ID!]
+  uuid_contains: ID
+  uuid_not_contains: ID
+  uuid_starts_with: ID
+  uuid_not_starts_with: ID
+  uuid_ends_with: ID
+  uuid_not_ends_with: ID
+  root: Boolean
+  root_not: Boolean
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  parent: _NodeFilter
+  parent_not: _NodeFilter
+  parent_in: [_NodeFilter!]
+  parent_not_in: [_NodeFilter!]
+}
+
+input _BranchInput {
+  uuid: ID!
+}
+
+enum _BranchOrdering {
+  uuid_asc
+  uuid_desc
+  root_asc
+  root_desc
+  title_asc
+  title_desc
+  description_asc
+  description_desc
+  isComplete_asc
+  isComplete_desc
   _id_asc
   _id_desc
 }
@@ -284,6 +349,16 @@ enum _GenericSearchResultOrdering {
   _id_desc
 }
 
+input _GetRoadMapResponseFilter {
+  AND: [_GetRoadMapResponseFilter!]
+  OR: [_GetRoadMapResponseFilter!]
+}
+
+enum _GetRoadMapResponseOrdering {
+  _id_asc
+  _id_desc
+}
+
 input _LeafFilter {
   AND: [_LeafFilter!]
   OR: [_LeafFilter!]
@@ -342,6 +417,11 @@ enum _LeafOrdering {
   isComplete_desc
   _id_asc
   _id_desc
+}
+
+type _MergeBranchParentPayload {
+  from: Node
+  to: Branch
 }
 
 type _MergeLeafParentPayload {
@@ -612,6 +692,11 @@ enum _RelationOrdering {
   _id_desc
 }
 
+type _RemoveBranchParentPayload {
+  from: Node
+  to: Branch
+}
+
 type _RemoveLeafParentPayload {
   from: Node
   to: Leaf
@@ -630,6 +715,98 @@ type _RemoveNodeParentPayload {
 type _RemoveTagForPayload {
   from: Tag
   to: Node
+}
+
+input _RoadMapFilter {
+  AND: [_RoadMapFilter!]
+  OR: [_RoadMapFilter!]
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  uuid: ID
+  uuid_not: ID
+  uuid_in: [ID!]
+  uuid_not_in: [ID!]
+  uuid_contains: ID
+  uuid_not_contains: ID
+  uuid_starts_with: ID
+  uuid_not_starts_with: ID
+  uuid_ends_with: ID
+  uuid_not_ends_with: ID
+}
+
+input _RoadMapInput {
+  uuid: ID!
+}
+
+enum _RoadMapOrdering {
+  title_asc
+  title_desc
+  uuid_asc
+  uuid_desc
+  _id_asc
+  _id_desc
+}
+
+input _RoadMapOrLeafFilter {
+  AND: [_RoadMapOrLeafFilter!]
+  OR: [_RoadMapOrLeafFilter!]
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  uuid: ID
+  uuid_not: ID
+  uuid_in: [ID!]
+  uuid_not_in: [ID!]
+  uuid_contains: ID
+  uuid_not_contains: ID
+  uuid_starts_with: ID
+  uuid_not_starts_with: ID
+  uuid_ends_with: ID
+  uuid_not_ends_with: ID
+  root: Boolean
+  root_not: Boolean
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+}
+
+input _RoadMapOrLeafInput {
+  uuid: ID!
+}
+
+enum _RoadMapOrLeafOrdering {
+  title_asc
+  title_desc
+  uuid_asc
+  uuid_desc
+  root_asc
+  root_desc
+  description_asc
+  description_desc
+  _id_asc
+  _id_desc
 }
 
 input _TagFilter {
@@ -703,6 +880,18 @@ type AuthPayload {
   _id: String
 }
 
+type Branch {
+  uuid: ID!
+  root: Boolean
+  title: String!
+  description: String
+  content: [String]
+  parent(filter: _NodeFilter): Node
+  isComplete: Boolean
+  neighbours(first: Int, offset: Int, orderBy: [_NodeOrdering]): [Node]
+  _id: String
+}
+
 type File {
   filename: ID!
   mimetype: String!
@@ -716,6 +905,13 @@ type GenericSearchResult {
   description: String
   score: Int!
   type: String
+  _id: String
+}
+
+type GetRoadMapResponse {
+  nodes(first: Int, offset: Int, orderBy: [_RoadMapOrLeafOrdering], filter: _RoadMapOrLeafFilter): [RoadMapOrLeaf]
+  rels(first: Int, offset: Int, orderBy: [_RelationOrdering], filter: _RelationFilter): [Relation]
+  completedNodes: [String]
   _id: String
 }
 
@@ -736,8 +932,8 @@ type Mutation {
   UploadFile(file: Upload!): File!
   SignUp(username: String!, email: String!, password: String!, confirmPassword: String!): AuthPayload
   SignIn(login: String!, password: String!): AuthPayload
+  CreateRoadMap(roadMap: [RoadMapInput]): Boolean
   FulfillNode(uuid: ID!): Boolean
-  CreateRoadMap: [Node]
   MergeUserWithTags(tags: [String]): Boolean
   CreateFile(filename: ID, mimetype: String!, encoding: String!): File
   UpdateFile(filename: ID!, mimetype: String, encoding: String): File
@@ -760,6 +956,13 @@ type Mutation {
   UpdateLeaf(uuid: ID!, root: Boolean, title: String, description: String, content: [String]): Leaf
   DeleteLeaf(uuid: ID!): Leaf
   MergeLeaf(uuid: ID!, root: Boolean, title: String, description: String, content: [String]): Leaf
+  AddBranchParent(from: _NodeInput!, to: _BranchInput!): _AddBranchParentPayload
+  RemoveBranchParent(from: _NodeInput!, to: _BranchInput!): _RemoveBranchParentPayload
+  MergeBranchParent(from: _NodeInput!, to: _BranchInput!): _MergeBranchParentPayload
+  CreateBranch(uuid: ID, root: Boolean, title: String!, description: String, content: [String]): Branch
+  UpdateBranch(uuid: ID!, root: Boolean, title: String, description: String, content: [String]): Branch
+  DeleteBranch(uuid: ID!): Branch
+  MergeBranch(uuid: ID!, root: Boolean, title: String, description: String, content: [String]): Branch
   AddTagFor(from: _TagInput!, to: _NodeInput!): _AddTagForPayload
   RemoveTagFor(from: _TagInput!, to: _NodeInput!): _RemoveTagForPayload
   MergeTagFor(from: _TagInput!, to: _NodeInput!): _MergeTagForPayload
@@ -785,6 +988,15 @@ type Mutation {
   UpdateAuthPayload(token: String!, uuid: String, email: String, username: String): AuthPayload
   DeleteAuthPayload(token: String!): AuthPayload
   MergeAuthPayload(token: String!, uuid: String, email: String, username: String): AuthPayload
+  UpdateRoadMap(title: String, uuid: ID!): RoadMap
+  DeleteRoadMap(uuid: ID!): RoadMap
+  MergeRoadMap(title: String, uuid: ID!): RoadMap
+  CreateRoadMapOrLeaf(title: String, uuid: ID, root: Boolean, description: String, content: [String], type: [String]): RoadMapOrLeaf
+  UpdateRoadMapOrLeaf(title: String, uuid: ID!, root: Boolean, description: String, content: [String], type: [String]): RoadMapOrLeaf
+  DeleteRoadMapOrLeaf(uuid: ID!): RoadMapOrLeaf
+  MergeRoadMapOrLeaf(title: String, uuid: ID!, root: Boolean, description: String, content: [String], type: [String]): RoadMapOrLeaf
+  CreateGetRoadMapResponse(completedNodes: [String]): GetRoadMapResponse
+  DeleteGetRoadMapResponse: GetRoadMapResponse
 }
 
 type Node {
@@ -811,20 +1023,49 @@ type Query {
   RoadMapSearch(searchString: String!, rootId: ID!, searchOnlyCompleted: Boolean, first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
   InterestedTag(first: Int, offset: Int, orderBy: [_TagOrdering], filter: _TagFilter): [Tag]
   SuggestedRelatedNodes(first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
+  GetRoadMap(uuid: String, filter: _GetRoadMapResponseFilter): GetRoadMapResponse
+  DauletGetUserRoadMapID: [String]
   File(filename: ID, mimetype: String, encoding: String, _id: String, first: Int, offset: Int, orderBy: [_FileOrdering], filter: _FileFilter): [File]
   Node(uuid: ID, root: Boolean, title: String, description: String, content: String, isComplete: Boolean, _id: String, first: Int, offset: Int, orderBy: [_NodeOrdering], filter: _NodeFilter): [Node]
   Leaf(uuid: ID, root: Boolean, title: String, description: String, content: String, isComplete: Boolean, _id: String, first: Int, offset: Int, orderBy: [_LeafOrdering], filter: _LeafFilter): [Leaf]
+  Branch(uuid: ID, root: Boolean, title: String, description: String, content: String, isComplete: Boolean, _id: String, first: Int, offset: Int, orderBy: [_BranchOrdering], filter: _BranchFilter): [Branch]
   Tag(uuid: ID, title: String, _id: String, first: Int, offset: Int, orderBy: [_TagOrdering], filter: _TagFilter): [Tag]
   Relation(from: ID, to: ID, _id: String, first: Int, offset: Int, orderBy: [_RelationOrdering], filter: _RelationFilter): [Relation]
   TreeNodePayload(_id: String, first: Int, offset: Int, orderBy: [_TreeNodePayloadOrdering], filter: _TreeNodePayloadFilter): [TreeNodePayload]
   GenericSearchResult(uuid: ID, title: String, description: String, score: Int, type: String, _id: String, first: Int, offset: Int, orderBy: [_GenericSearchResultOrdering], filter: _GenericSearchResultFilter): [GenericSearchResult]
   AuthError(key: String, value: String, _id: String, first: Int, offset: Int, orderBy: [_AuthErrorOrdering], filter: _AuthErrorFilter): [AuthError]
   AuthPayload(token: String, uuid: String, email: String, username: String, _id: String, first: Int, offset: Int, orderBy: [_AuthPayloadOrdering], filter: _AuthPayloadFilter): [AuthPayload]
+  RoadMap(title: String, uuid: ID, _id: String, first: Int, offset: Int, orderBy: [_RoadMapOrdering], filter: _RoadMapFilter): [RoadMap]
+  RoadMapOrLeaf(title: String, uuid: ID, root: Boolean, description: String, content: String, type: String, _id: String, first: Int, offset: Int, orderBy: [_RoadMapOrLeafOrdering], filter: _RoadMapOrLeafFilter): [RoadMapOrLeaf]
+  GetRoadMapResponse(completedNodes: String, _id: String, first: Int, offset: Int, orderBy: [_GetRoadMapResponseOrdering], filter: _GetRoadMapResponseFilter): [GetRoadMapResponse]
 }
 
 type Relation {
   from: ID!
   to: ID!
+  _id: String
+}
+
+type RoadMap {
+  title: String
+  uuid: ID!
+  _id: String
+}
+
+input RoadMapInput {
+  title: String!
+  uuid: String!
+  nodes: [String]
+  next: [String]
+}
+
+type RoadMapOrLeaf {
+  title: String
+  uuid: ID!
+  root: Boolean
+  description: String
+  content: [String]
+  type: [String]
   _id: String
 }
 
