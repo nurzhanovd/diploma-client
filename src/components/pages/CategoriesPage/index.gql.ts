@@ -11,6 +11,8 @@ export const QueryCategories = gql`
     SuggestedRelatedNodes @include(if: $suggestion) {
       title
       uuid
+      description
+      image
     }
   }
 `;
